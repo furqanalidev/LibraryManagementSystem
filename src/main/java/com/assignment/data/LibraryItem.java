@@ -13,7 +13,7 @@ public abstract class LibraryItem extends GeneralEntity {
     /** Title of the library item */
     private final String title;
     /** Number of copies available for borrowing */
-    private final int availableCopies;
+    private int availableCopies;
     /** Whether this item can be borrowed */
     private final boolean isBorrowable;
     /** Genre classification of the item */
@@ -113,5 +113,13 @@ public abstract class LibraryItem extends GeneralEntity {
      */
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    /**
+     * Updates the number of available copies
+     * @param availableCopies new number of available copies
+     */
+    public void setAvailableCopies(int availableCopies) {
+        this.availableCopies = availableCopies;
     }
 }

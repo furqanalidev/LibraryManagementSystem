@@ -1,6 +1,9 @@
 package com.assignment.dao;
 
 import com.assignment.data.Book;
+import com.assignment.data.Genre;
+import com.assignment.data.Language;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +42,7 @@ public interface BookDao extends Dao<Book> {
      * @throws SQLException if a database access error occurs
      */
     List<Book> findByGenre(int genreId) throws SQLException;
+    List<Book> findByGenre(Genre genre) throws SQLException;
     
     /**
      * Updates the available copies count for a book.
@@ -49,4 +53,8 @@ public interface BookDao extends Dao<Book> {
      * @throws SQLException if a database access error occurs
      */
     boolean updateAvailableCopies(int bookId, int count) throws SQLException;
+    List<Book> findByTitle(String title) throws SQLException;
+    List<Book> findByLanguage(Language language) throws SQLException;
+    List<Book> findAvailable() throws SQLException;
 }
+
