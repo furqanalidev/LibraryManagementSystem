@@ -1,7 +1,10 @@
 package com.assignment;
 
+import com.assignment.cli.LibraryManagementCLI;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        LibraryManagementCLI cli = new LibraryManagementCLI();
+        cli.start();
     }
 }

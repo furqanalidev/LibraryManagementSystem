@@ -1,3 +1,19 @@
+CREATE DATABASE library;
+
+USE library;
+
+CREATE TABLE `Language` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `Genre` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `Book` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `isbn` VARCHAR(50) NOT NULL,
@@ -17,42 +33,6 @@ CREATE TABLE `Book` (
   CONSTRAINT `FK_Book_Genre` FOREIGN KEY (`genre_id`) REFERENCES `Genre` (`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `Genre` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `Language` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `BookBorrow` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `bookId` INT NOT NULL,
-  `date` DATETIME NOT NULL,
-  `status` ENUM('PENDING', 'BORROWED', 'RETURNED', 'OVERDUE') NOT NULL,
-  `staffId` INT NOT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `FK_Book_TO_BookBorrow` FOREIGN KEY (`bookId`) REFERENCES `Book` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_Staff_TO_BookBorrow` FOREIGN KEY (`staffId`) REFERENCES `Staff` (`id`) ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `BookFine` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `userBookBorrowId` INT NOT NULL,
-  `amount` DECIMAL(10,2) NOT NULL,
-  `status` ENUM('PAID', 'UNPAID') NOT NULL,
-  `reason` VARCHAR(255) NOT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `FK_UserBookBorrow_TO_BookFine` FOREIGN KEY (`userBookBorrowId`) REFERENCES `UserBookBorrow` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `Magazine` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
@@ -65,30 +45,6 @@ CREATE TABLE `Magazine` (
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_Genre_TO_Magazine` FOREIGN KEY (`genreId`) REFERENCES `Genre` (`id`),
   CONSTRAINT `FK_Language_TO_Magazine` FOREIGN KEY (`languageId`) REFERENCES `Language` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `MagazineBorrow` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `date` DATETIME NOT NULL,
-  `status` ENUM('PENDING', 'BORROWED', 'RETURNED', 'OVERDUE') NOT NULL,
-  `magazineId` INT NOT NULL,
-  `staffId` INT NOT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `FK_Magazine_TO_MagazineBorrow` FOREIGN KEY (`magazineId`) REFERENCES `Magazine` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `FK_Staff_TO_MagazineBorrow` FOREIGN KEY (`staffId`) REFERENCES `Staff` (`id`) ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE `MagazineFine` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `userMagazineBorrowId` INT NOT NULL,
-  `amount` DECIMAL(10,2) NOT NULL,
-  `status` ENUM('PAID', 'UNPAID') NOT NULL,
-  `reason` VARCHAR(255) NOT NULL,
-  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `FK_UserMagazineBorrow_TO_MagazineFine` FOREIGN KEY (`userMagazineBorrowId`) REFERENCES `UserMagazineBorrow` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `Staff` (
@@ -125,16 +81,30 @@ CREATE TABLE `User` (
   UNIQUE KEY `UQ_user_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `UserActivityLog` (
+CREATE TABLE `BookBorrow` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `userId` INT NOT NULL,
-  `action` ENUM('BORROW', 'RETURN', 'FINE_PAID', 'FINE_ISSUED') NOT NULL,
-  `referenceId` INT NOT NULL,
-  `referenceType` ENUM('BOOK', 'MAGAZINE') NOT NULL,
+  `bookId` INT NOT NULL,
   `date` DATETIME NOT NULL,
-  `details` VARCHAR(255) NULL,
+  `status` ENUM('PENDING', 'BORROWED', 'RETURNED', 'OVERDUE') NOT NULL,
+  `staffId` INT NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  CONSTRAINT `FK_User_TO_UserActivityLog` FOREIGN KEY (`userId`) REFERENCES `User` (`id`) ON DELETE CASCADE
+  CONSTRAINT `FK_Book_TO_BookBorrow` FOREIGN KEY (`bookId`) REFERENCES `Book` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_Staff_TO_BookBorrow` FOREIGN KEY (`staffId`) REFERENCES `Staff` (`id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `MagazineBorrow` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `date` DATETIME NOT NULL,
+  `status` ENUM('PENDING', 'BORROWED', 'RETURNED', 'OVERDUE') NOT NULL,
+  `magazineId` INT NOT NULL,
+  `staffId` INT NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_Magazine_TO_MagazineBorrow` FOREIGN KEY (`magazineId`) REFERENCES `Magazine` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_Staff_TO_MagazineBorrow` FOREIGN KEY (`staffId`) REFERENCES `Staff` (`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `UserBookBorrow` (
@@ -154,6 +124,41 @@ CREATE TABLE `UserMagazineBorrow` (
   CONSTRAINT `FK_MagazineBorrow_TO_UserMagazineBorrow` FOREIGN KEY (`magazineBorrowId`) REFERENCES `MagazineBorrow` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_User_TO_UserMagazineBorrow` FOREIGN KEY (`userId`) REFERENCES `User` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `BookFine` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userBookBorrowId` INT NOT NULL,
+  `amount` DECIMAL(10,2) NOT NULL,
+  `status` ENUM('PAID', 'UNPAID') NOT NULL,
+  `reason` VARCHAR(255) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_UserBookBorrow_TO_BookFine` FOREIGN KEY (`userBookBorrowId`) REFERENCES `UserBookBorrow` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `MagazineFine` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userMagazineBorrowId` INT NOT NULL,
+  `amount` DECIMAL(10,2) NOT NULL,
+  `status` ENUM('PAID', 'UNPAID') NOT NULL,
+  `reason` VARCHAR(255) NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_UserMagazineBorrow_TO_MagazineFine` FOREIGN KEY (`userMagazineBorrowId`) REFERENCES `UserMagazineBorrow` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `UserActivityLog` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userId` INT NOT NULL,
+  `action` ENUM('BORROW', 'RETURN', 'FINE_PAID', 'FINE_ISSUED') NOT NULL,
+  `referenceId` INT NOT NULL,
+  `referenceType` ENUM('BOOK', 'MAGAZINE') NOT NULL,
+  `date` DATETIME NOT NULL,
+  `details` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_User_TO_UserActivityLog` FOREIGN KEY (`userId`) REFERENCES `User` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 CREATE INDEX `idx_magazine_id` ON `Magazine` (`id`);
 CREATE INDEX `idx_book_isbn` ON `Book` (`isbn`);
