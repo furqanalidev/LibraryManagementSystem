@@ -2,6 +2,7 @@ CREATE DATABASE library;
 
 USE library;
 
+
 CREATE TABLE `Language` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
@@ -164,3 +165,20 @@ CREATE INDEX `idx_magazine_id` ON `Magazine` (`id`);
 CREATE INDEX `idx_book_isbn` ON `Book` (`isbn`);
 CREATE INDEX `idx_user_email` ON `User` (`email`);
 CREATE INDEX `idx_staff_email` ON `Staff` (`email`);
+
+-- Add username column to Staff table
+ALTER TABLE `Staff` 
+ADD COLUMN `username` VARCHAR(50) NOT NULL AFTER `id`,
+ADD UNIQUE KEY `UQ_staff_username` (`username`);
+
+-- Add username column to User table
+ALTER TABLE `User`
+ADD COLUMN `username` VARCHAR(50) NOT NULL AFTER `id`,
+ADD UNIQUE KEY `UQ_user_username` (`username`);
+
+-- Create new credentials table
+CREATE TABLE `Credentials` (
+  `username` VARCHAR(50) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
