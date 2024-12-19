@@ -24,8 +24,8 @@ public class ServiceFactory {
     private UserActivityLogService activityLogService;
     private ReportService reportService;
     
-    public ServiceFactory(String dbUrl, String dbUsername, String dbPassword) {
-        this.dbService = new DatabaseConnectionServiceImpl(dbUrl, dbUsername, dbPassword);
+    public ServiceFactory() {
+        this.dbService = new DatabaseConnectionServiceImpl();
         initializeServices();
     }
     

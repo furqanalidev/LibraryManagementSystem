@@ -2,6 +2,7 @@ CREATE DATABASE library;
 
 USE library;
 
+
 CREATE TABLE `Language` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(50) NOT NULL,
@@ -20,17 +21,17 @@ CREATE TABLE `Book` (
   `title` VARCHAR(255) NOT NULL,
   `author` VARCHAR(100) NOT NULL,
   `publisher` VARCHAR(100) NOT NULL,
-  `language_id` INT NOT NULL,
+  `languageId` INT NOT NULL,
   `year` YEAR NOT NULL,
   `availableCopies` INT NOT NULL,
-  `genre_id` INT NOT NULL,
+  `genreId` INT NOT NULL,
   `isBorrowable` TINYINT(1) NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQ_isbn` (`isbn`),
-  CONSTRAINT `FK_Book_Language` FOREIGN KEY (`language_id`) REFERENCES `Language` (`id`) ON DELETE RESTRICT,
-  CONSTRAINT `FK_Book_Genre` FOREIGN KEY (`genre_id`) REFERENCES `Genre` (`id`) ON DELETE RESTRICT
+  CONSTRAINT `FK_Book_Language` FOREIGN KEY (`languageId`) REFERENCES `Language` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `FK_Book_Genre` FOREIGN KEY (`genreId`) REFERENCES `Genre` (`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `Magazine` (
@@ -164,3 +165,20 @@ CREATE INDEX `idx_magazine_id` ON `Magazine` (`id`);
 CREATE INDEX `idx_book_isbn` ON `Book` (`isbn`);
 CREATE INDEX `idx_user_email` ON `User` (`email`);
 CREATE INDEX `idx_staff_email` ON `Staff` (`email`);
+
+-- Add username column to Staff table
+ALTER TABLE `Staff` 
+ADD COLUMN `username` VARCHAR(50) NOT NULL AFTER `id`,
+ADD UNIQUE KEY `UQ_staff_username` (`username`);
+
+-- Add username column to User table
+ALTER TABLE `User`
+ADD COLUMN `username` VARCHAR(50) NOT NULL AFTER `id`,
+ADD UNIQUE KEY `UQ_user_username` (`username`);
+
+-- Create new credentials table
+CREATE TABLE `Credentials` (
+  `username` VARCHAR(50) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

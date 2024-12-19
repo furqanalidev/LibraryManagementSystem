@@ -57,6 +57,9 @@ public class UserOperationHandler {
     private void registerUser() {
         try {
             System.out.println("\nEnter User Details:");
+
+            System.out.println("Username: ");
+            String username = scanner.nextLine();
             
             System.out.print("First Name: ");
             String firstName = scanner.nextLine();
@@ -77,7 +80,7 @@ public class UserOperationHandler {
             System.out.print("Email: ");
             String email = scanner.nextLine();
             
-            User user = new User(0, firstName, lastName, cnic, address, contact, 
+            User user = new User(0,username, firstName, lastName, cnic, address, contact, 
                                email, 0, 5, 3); // Default limits
             
             User savedUser = userService.registerUser(user);
@@ -109,6 +112,7 @@ public class UserOperationHandler {
             
             User updatedUser = new User(
                 existingUser.getId(),
+                existingUser.getUsername(),
                 existingUser.getFirstName(),
                 existingUser.getLastName(),
                 existingUser.getCnic(),

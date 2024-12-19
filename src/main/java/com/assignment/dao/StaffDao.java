@@ -39,5 +39,6 @@ public interface StaffDao extends Dao<Staff> {
      */
     Optional<Staff> findByContact(String contact) throws SQLException;
     List<Staff> findByOccupation(Staff.Occupation occupation) throws SQLException;
+    Optional<Staff> findByUsername(String username) throws SQLException;
 }
 

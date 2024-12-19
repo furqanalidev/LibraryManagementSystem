@@ -41,9 +41,9 @@ public class Staff extends Person {
      * @param email      primary email address
      * @param occupation staff member's role in the library
      */
-    public Staff(int id, String firstName, String lastName, Long cnic, 
+    public Staff(int id,String username, String firstName, String lastName, Long cnic, 
                 String address, String contact, String email, Occupation occupation) {
-        this(id, firstName, lastName, cnic, address, contact, email, occupation, null);
+        this(id,username, firstName, lastName, cnic, address, contact, email, occupation, null);
     }
 
     /**
@@ -60,10 +60,10 @@ public class Staff extends Person {
      * @param occupation staff member's role in the library
      * @param createdAt  timestamp when record was created
      */
-    public Staff(int id, String firstName, String lastName, Long cnic, 
+    public Staff(int id,String username, String firstName, String lastName, Long cnic, 
                 String address, String contact, String email, Occupation occupation,
                 LocalDateTime createdAt) {
-        super(id, firstName, lastName, cnic, address, contact, email, createdAt);
+        super(id,username, firstName, lastName, cnic, address, contact, email, createdAt);
         this.occupation = occupation;
     }
 

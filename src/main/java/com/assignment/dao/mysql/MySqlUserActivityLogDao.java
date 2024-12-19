@@ -166,6 +166,7 @@ public class MySqlUserActivityLogDao implements UserActivityLogDao {
             if (userRs.next()) {
                 User user = new User(
                         userRs.getInt("id"),
+                        userRs.getString("username"),
                         userRs.getString("firstName"),
                         userRs.getString("lastName"),
                         userRs.getLong("cnic"),

@@ -18,6 +18,8 @@ public class Person extends GeneralEntity {
     private final String lastName;
     /** CNIC (Computerized National Identity Card) number - unique identifier */
     private final Long cnic;
+    /** Username for logging into the system - cannot be modified */
+    private final String username;
     
     // Contact Information
     /** Residential or business address */
@@ -36,6 +38,7 @@ public class Person extends GeneralEntity {
      * The createdAt timestamp will be automatically set by the database.
      *
      * @param id        unique identifier for the person
+     * @param username  login username of person
      * @param firstName person's legal first name
      * @param lastName  person's legal last name
      * @param cnic      unique national identity number
@@ -43,9 +46,9 @@ public class Person extends GeneralEntity {
      * @param contact   primary contact number
      * @param email     primary email address
      */
-    public Person(int id, String firstName, String lastName, Long cnic, 
+    public Person(int id,String username, String firstName, String lastName, Long cnic, 
                  String address, String contact, String email) {
-        this(id, firstName, lastName, cnic, address, contact, email, null);
+        this(id,username, firstName, lastName, cnic, address, contact, email, null);
     }
 
     /**
@@ -53,6 +56,7 @@ public class Person extends GeneralEntity {
      * Used when retrieving records that already have a creation timestamp.
      *
      * @param id        unique identifier for the person
+     * @param username  login username of person
      * @param firstName person's legal first name
      * @param lastName  person's legal last name
      * @param cnic      unique national identity number
@@ -61,9 +65,10 @@ public class Person extends GeneralEntity {
      * @param email     primary email address
      * @param createdAt timestamp when record was created
      */
-    public Person(int id, String firstName, String lastName, Long cnic, 
+    public Person(int id,String username, String firstName, String lastName, Long cnic, 
                  String address, String contact, String email, LocalDateTime createdAt) {
         super(id);
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.cnic = cnic;
@@ -71,6 +76,14 @@ public class Person extends GeneralEntity {
         this.contact = contact;
         this.email = email;
         this.createdAt = createdAt;
+    }
+
+    /**
+     * 
+     * @return person's username
+     */
+    public String getUsername() {
+        return username;
     }
 
     /**

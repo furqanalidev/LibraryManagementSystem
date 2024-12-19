@@ -68,4 +68,14 @@ public class GenreServiceImpl implements GenreService {
             throw new ServiceException("Failed to find genre by name", e);
         }
     }
+
+    @Override
+    public Genre findById(int id) throws ServiceException {
+        try {
+            return genreDao.findById(id)
+                .orElseThrow(() -> new ServiceException("Genre not found with id: " + id));
+        } catch (Exception e) {
+            throw new ServiceException("Failed to find genre by id", e);
+        }
+    }
 }

@@ -14,24 +14,16 @@ import java.util.Optional;
  */
 public class MySqlUserDao implements UserDao {
 
-    private static final String SELECT_BY_ID = 
-        "SELECT * FROM User WHERE id = ?";
-    private static final String SELECT_ALL = 
-        "SELECT * FROM User";
-    private static final String INSERT = 
-        "INSERT INTO User (firstName, lastName, cnic, address, contact, email, borrowings, bookBorrowLimit, magazineBorrowLimit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE = 
-        "UPDATE User SET firstName = ?, lastName = ?, cnic = ?, address = ?, contact = ?, email = ?, borrowings = ?, bookBorrowLimit = ?, magazineBorrowLimit = ? WHERE id = ?";
-    private static final String DELETE = 
-        "DELETE FROM User WHERE id = ?";
-    private static final String SELECT_BY_EMAIL = 
-        "SELECT * FROM User WHERE email = ?";
-    private static final String SELECT_BY_CNIC = 
-        "SELECT * FROM User WHERE cnic = ?";
-    private static final String SELECT_BY_CONTACT = 
-        "SELECT * FROM User WHERE contact = ?";
-    private static final String UPDATE_BORROWINGS = 
-        "UPDATE User SET borrowings = ? WHERE id = ?";
+    private static final String SELECT_BY_ID = "SELECT * FROM User WHERE id = ?";
+    private static final String SELECT_ALL = "SELECT * FROM User";
+    private static final String INSERT = "INSERT INTO User (firstName, lastName, cnic, address, contact, email, borrowings, bookBorrowLimit, magazineBorrowLimit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE = "UPDATE User SET firstName = ?, lastName = ?, cnic = ?, address = ?, contact = ?, email = ?, borrowings = ?, bookBorrowLimit = ?, magazineBorrowLimit = ? WHERE id = ?";
+    private static final String DELETE = "DELETE FROM User WHERE id = ?";
+    private static final String SELECT_BY_EMAIL = "SELECT * FROM User WHERE email = ?";
+    private static final String SELECT_BY_CNIC = "SELECT * FROM User WHERE cnic = ?";
+    private static final String SELECT_BY_CONTACT = "SELECT * FROM User WHERE contact = ?";
+    private static final String UPDATE_BORROWINGS = "UPDATE User SET borrowings = ? WHERE id = ?";
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM User WHERE username = ?";
 
     private final Connection connection;
 
@@ -68,7 +60,7 @@ public class MySqlUserDao implements UserDao {
         try (PreparedStatement stmt = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             setUserParameters(stmt, user);
             stmt.executeUpdate();
-            
+
             ResultSet generatedKeys = stmt.getGeneratedKeys();
             if (generatedKeys.next()) {
                 user.setId(generatedKeys.getInt(1));
@@ -138,21 +130,32 @@ public class MySqlUserDao implements UserDao {
             return stmt.executeUpdate() > 0;
         }
     }
+    @Override
+    public Optional<User> findByUsername(String username) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(SELECT_BY_USERNAME)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(extractUserFromResultSet(rs));
+            }
+        }
+        return Optional.empty();
+    }
 
     private User extractUserFromResultSet(ResultSet rs) throws SQLException {
         return new User(
-            rs.getInt("id"),
-            rs.getString("firstName"),
-            rs.getString("lastName"),
-            rs.getLong("cnic"),
-            rs.getString("address"),
-            rs.getString("contact"),
-            rs.getString("email"),
-            rs.getInt("borrowings"),
-            rs.getInt("bookBorrowLimit"),
-            rs.getInt("magazineBorrowLimit"),
-            rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null
-        );
+                rs.getInt("id"),
+                rs.getString("username"),
+                rs.getString("firstName"),
+                rs.getString("lastName"),
+                rs.getLong("cnic"),
+                rs.getString("address"),
+                rs.getString("contact"),
+                rs.getString("email"),
+                rs.getInt("borrowings"),
+                rs.getInt("bookBorrowLimit"),
+                rs.getInt("magazineBorrowLimit"),
+                rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null);
     }
 
     private void setUserParameters(PreparedStatement stmt, User user) throws SQLException {

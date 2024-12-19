@@ -78,4 +78,14 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Failed to find user by CNIC", e);
         }
     }
+
+    @Override
+    public User findByUsername(String username) throws ServiceException {
+        try {
+            return userDao.findByUsername(username)
+                .orElseThrow(() -> new ServiceException("User not found with username: " + username));
+        } catch (SQLException e) {
+            throw new ServiceException("Failed to find user by username", e);
+        }
+    }
 }

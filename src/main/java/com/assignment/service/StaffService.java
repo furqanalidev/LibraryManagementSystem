@@ -45,4 +45,5 @@ public interface StaffService {
      * @throws ServiceException if operation fails
      */
     List<Staff> findByOccupation(Staff.Occupation occupation) throws ServiceException;
+    Staff findByUsername(String uesrname) throws ServiceException;
 }

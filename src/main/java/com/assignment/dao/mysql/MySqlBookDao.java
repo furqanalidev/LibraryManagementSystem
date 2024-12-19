@@ -1,14 +1,23 @@
 package com.assignment.dao.mysql;
 
 import com.assignment.dao.BookDao;
+import com.assignment.dao.GenreDao;
+import com.assignment.dao.LanguageDao;
 import com.assignment.data.Book;
 import com.assignment.data.Language;
+import com.assignment.service.GenreService;
+import com.assignment.service.LanguageService;
+import com.assignment.service.impl.DatabaseConnectionServiceImpl;
+import com.assignment.service.impl.GenreServiceImpl;
+import com.assignment.service.impl.LanguageServiceImpl;
 import com.assignment.data.Genre;
 import java.sql.*;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.swing.JOptionPane;
 
 /**
  * MySQL implementation of the BookDao interface.
@@ -79,6 +88,7 @@ public class MySqlBookDao implements BookDao {
         try (PreparedStatement stmt = connection.prepareStatement(UPDATE)) {
             setBookParameters(stmt, book);
             stmt.setInt(10, book.getId());
+            //System.out.println(stmt.executeUpdate());
             return stmt.executeUpdate() > 0;
         }
     }
@@ -190,10 +200,14 @@ public class MySqlBookDao implements BookDao {
     }
 
     private Book extractBookFromResultSet(ResultSet rs) throws SQLException {
-        Language language = new Language(rs.getInt("language_id"), null); // We'll need to fetch actual language details
-        Genre genre = new Genre(rs.getInt("genre_id"), null); // We'll need to fetch actual genre details
-
-        return new Book(
+        try {
+            LanguageDao languageDao = new MySqlLanguageDao();
+            LanguageService languageService = new LanguageServiceImpl(languageDao);
+            Language language = languageService.findById(rs.getInt("languageId"));
+            GenreDao genreDao = new MySqlGenreDao(DatabaseConnectionServiceImpl.newConnection());
+            GenreService genreService = new GenreServiceImpl(genreDao);
+            Genre genre = genreService.findById(rs.getInt("genreId"));
+            return new Book(
                 rs.getInt("id"),
                 rs.getString("isbn"),
                 rs.getString("title"),
@@ -206,6 +220,11 @@ public class MySqlBookDao implements BookDao {
                 rs.getBoolean("isBorrowable"),
                 rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
                 rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error while extracting book from Database!");
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void setBookParameters(PreparedStatement stmt, Book book) throws SQLException {

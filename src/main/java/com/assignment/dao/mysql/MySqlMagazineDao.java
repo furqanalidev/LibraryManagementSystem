@@ -1,13 +1,22 @@
 package com.assignment.dao.mysql;
 
+import com.assignment.dao.GenreDao;
+import com.assignment.dao.LanguageDao;
 import com.assignment.dao.MagazineDao;
 import com.assignment.data.Magazine;
+import com.assignment.service.GenreService;
+import com.assignment.service.LanguageService;
+import com.assignment.service.impl.DatabaseConnectionServiceImpl;
+import com.assignment.service.impl.GenreServiceImpl;
+import com.assignment.service.impl.LanguageServiceImpl;
 import com.assignment.data.Language;
 import com.assignment.data.Genre;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.swing.JOptionPane;
 
 /**
  * MySQL implementation of the MagazineDao interface.
@@ -162,10 +171,14 @@ public class MySqlMagazineDao implements MagazineDao {
     }
 
     private Magazine extractMagazineFromResultSet(ResultSet rs) throws SQLException {
-        Language language = new Language(rs.getInt("languageId"), null);
-        Genre genre = new Genre(rs.getInt("genreId"), null);
-
-        return new Magazine(
+        try {
+            LanguageDao languageDao = new MySqlLanguageDao();
+            LanguageService languageService = new LanguageServiceImpl(languageDao);
+            Language language = languageService.findById(rs.getInt("languageId"));
+            GenreDao genreDao = new MySqlGenreDao(DatabaseConnectionServiceImpl.newConnection());
+            GenreService genreService = new GenreServiceImpl(genreDao);
+            Genre genre = genreService.findById(rs.getInt("genreId"));
+            return new Magazine(
                 rs.getInt("id"),
                 rs.getString("title"),
                 rs.getInt("availableCopies"),
@@ -174,6 +187,11 @@ public class MySqlMagazineDao implements MagazineDao {
                 language,
                 rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
                 rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error while extracting magazine from Database!");
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void setMagazineParameters(PreparedStatement stmt, Magazine magazine) throws SQLException {

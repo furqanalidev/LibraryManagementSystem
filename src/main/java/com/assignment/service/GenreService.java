@@ -53,4 +53,12 @@ public interface GenreService {
      * @throws ServiceException if operation fails
      */
     Genre findByName(String name) throws ServiceException;
+
+    /**
+     * Finds a genre by ID.
+     * @param genreId the ID of the genre to find
+     * @return the found genre
+     * @throws ServiceException if operation fails
+     */
+    Genre findById(int genreId) throws ServiceException;
 }

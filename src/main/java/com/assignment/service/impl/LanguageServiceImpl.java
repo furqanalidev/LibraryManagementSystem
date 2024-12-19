@@ -68,4 +68,14 @@ public class LanguageServiceImpl implements LanguageService {
             throw new ServiceException("Failed to find language by name", e);
         }
     }
+
+    @Override
+    public Language findById(int id) throws ServiceException {
+        try {
+            return languageDao.findById(id)
+                .orElseThrow(() -> new ServiceException("Language not found with id: " + id));
+        } catch (SQLException e) {
+            throw new ServiceException("Failed to find language by id", e);
+        }
+    }
 }

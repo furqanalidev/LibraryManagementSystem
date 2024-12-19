@@ -50,6 +50,9 @@ public class StaffOperationHandler {
     private void registerStaff() {
         try {
             System.out.println("\nEnter Staff Details:");
+
+            System.out.println("Username: ");
+            String username = scanner.nextLine();
             
             System.out.print("First Name: ");
             String firstName = scanner.nextLine();
@@ -92,7 +95,7 @@ public class StaffOperationHandler {
                     throw new ServiceException("Invalid occupation choice");
             }
             
-            Staff staff = new Staff(0, firstName, lastName, cnic, address, 
+            Staff staff = new Staff(0,username, firstName, lastName, cnic, address, 
                                   contact, email, occupation);
             
             Staff savedStaff = staffService.registerStaff(staff);
@@ -124,6 +127,7 @@ public class StaffOperationHandler {
             
             Staff updatedStaff = new Staff(
                 existingStaff.getId(),
+                existingStaff.getUsername(),
                 existingStaff.getFirstName(),
                 existingStaff.getLastName(),
                 existingStaff.getCnic(),

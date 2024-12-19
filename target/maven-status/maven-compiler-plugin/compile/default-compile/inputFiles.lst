@@ -4,7 +4,9 @@ C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\se
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\cli\LibraryManagementCLI.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\data\Fine.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\service\impl\DatabaseConnectionServiceImpl.java
+C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\gui\MainWindow.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\data\GeneralEntity.java
+C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\gui\MagazinePanel.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\dao\mysql\MySqlUserActivityLogDao.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\data\UserBookBorrow.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\data\Person.java
@@ -18,7 +20,6 @@ C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\se
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\dao\FineDao.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\service\GenreService.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\data\UserMagazineBorrow.java
-C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\gui\NewJFrame.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\service\impl\UserServiceImpl.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\service\impl\BookServiceImpl.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\service\impl\ReportServiceImpl.java
@@ -38,7 +39,10 @@ C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\se
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\dao\GenreDao.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\gui\LoginForm.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\dao\mysql\MySqlUserBookBorrowDao.java
+C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\gui\DrawMode.java
+C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\gui\BookFrom.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\dao\BookFineDao.java
+C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\gui\BookPanel.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\service\impl\StaffServiceImpl.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\dao\UserMagazineBorrowDao.java
 C:\Users\meher\Downloads\librarymanagementsystem\src\main\java\com\assignment\dao\mysql\MySqlMagazineDao.java

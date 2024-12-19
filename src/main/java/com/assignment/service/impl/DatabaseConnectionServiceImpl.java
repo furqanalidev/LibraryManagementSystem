@@ -20,13 +20,18 @@ public class DatabaseConnectionServiceImpl implements DatabaseConnectionService 
     private final String password;
     private final List<Connection> activeConnections;
     
-    public DatabaseConnectionServiceImpl(String url, String username, String password) {
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    public DatabaseConnectionServiceImpl() {
+        this.url = "jdbc:mysql://localhost:3307/library";
+        this.username = "root";
+        this.password = "rootpass";
         this.activeConnections = new ArrayList<>();
     }
     
+    public static Connection newConnection() throws ServiceException {
+        DatabaseConnectionService databaseConnectionService = new DatabaseConnectionServiceImpl();
+        return databaseConnectionService.getConnection();
+    }
+
     @Override
     public Connection getConnection() throws ServiceException {
         try {

@@ -1,5 +1,7 @@
 package com.assignment.service;
 
+import javax.swing.JOptionPane;
+
 /**
  * Custom exception class for service layer errors.
  *
@@ -9,6 +11,7 @@ public class ServiceException extends Exception {
     
     public ServiceException(String message) {
         super(message);
+        JOptionPane.showMessageDialog(null, message);
     }
     
     public ServiceException(String message, Throwable cause) {

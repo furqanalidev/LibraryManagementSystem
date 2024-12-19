@@ -2,6 +2,7 @@ package com.assignment.data;
 
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.Objects;
 
 /**
  * Represents a book in the library system.
@@ -94,4 +95,22 @@ public class Book extends LibraryItem {
     public Year getYear() {
         return year;
     }
+
+        @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Book other = (Book) obj;
+        return getId() == other.getId() 
+            && Objects.equals(isbn, other.isbn)
+            && Objects.equals(getTitle(), other.getTitle())
+            && Objects.equals(author, other.author)
+            && Objects.equals(publisher, other.publisher)
+            && getLanguage().equals(other.getLanguage())
+            && Objects.equals(year, other.year)
+            && getAvailableCopies() == other.getAvailableCopies()
+            && getGenre().equals(other.getGenre())
+            && isBorrowable() == other.isBorrowable();
+    }
+
 }

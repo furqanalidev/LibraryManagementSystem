@@ -64,4 +64,13 @@ public class StaffServiceImpl implements StaffService {
             throw new ServiceException("Failed to find staff members by occupation", e);
         }
     }
+
+    @Override
+    public Staff findByUsername(String username) throws ServiceException {
+        try {
+            return staffDao.findByUsername(username).orElse(null);
+        } catch (SQLException e) {
+            throw new ServiceException("Error while finding staff member by username", e);
+        }
+    }
 }

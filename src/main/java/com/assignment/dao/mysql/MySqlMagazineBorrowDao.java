@@ -142,6 +142,7 @@ public class MySqlMagazineBorrowDao implements MagazineBorrowDao {
             if (staffRs.next()) {
                 Staff staff = new Staff(
                     staffRs.getInt("id"),
+                    staffRs.getString("username"),
                     staffRs.getString("firstName"),
                     staffRs.getString("lastName"),
                     staffRs.getLong("cnic"),

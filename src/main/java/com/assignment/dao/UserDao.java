@@ -47,4 +47,5 @@ public interface UserDao extends Dao<User> {
      * @throws SQLException if a database access error occurs
      */
     boolean updateBorrowings(int userId, int borrowings) throws SQLException;
+    Optional<User> findByUsername(String username) throws SQLException;
 }

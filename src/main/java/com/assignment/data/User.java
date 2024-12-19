@@ -34,10 +34,10 @@ public class User extends Person {
      * @param bookBorrowLimit     maximum allowed book borrowings
      * @param magazineBorrowLimit maximum allowed magazine borrowings
      */
-    public User(int id, String firstName, String lastName, Long cnic, 
+    public User(int id,String username, String firstName, String lastName, Long cnic, 
                 String address, String contact, String email, 
                 int borrowings, int bookBorrowLimit, int magazineBorrowLimit) {
-        this(id, firstName, lastName, cnic, address, contact, email, 
+        this(id,username, firstName, lastName, cnic, address, contact, email, 
              borrowings, bookBorrowLimit, magazineBorrowLimit, null);
     }
 
@@ -57,11 +57,11 @@ public class User extends Person {
      * @param magazineBorrowLimit maximum allowed magazine borrowings
      * @param createdAt           timestamp when record was created
      */
-    public User(int id, String firstName, String lastName, Long cnic, 
+    public User(int id,String username, String firstName, String lastName, Long cnic, 
                 String address, String contact, String email, 
                 int borrowings, int bookBorrowLimit, int magazineBorrowLimit,
                 LocalDateTime createdAt) {
-        super(id, firstName, lastName, cnic, address, contact, email, createdAt);
+        super(id,username, firstName, lastName, cnic, address, contact, email, createdAt);
         this.borrowings = borrowings;
         this.bookBorrowLimit = bookBorrowLimit;
         this.magazineBorrowLimit = magazineBorrowLimit;

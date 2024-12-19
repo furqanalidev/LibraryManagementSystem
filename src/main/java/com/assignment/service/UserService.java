@@ -55,4 +55,5 @@ public interface UserService {
      * @throws ServiceException if operation fails
      */
     User findByCnic(long cnic) throws ServiceException;
+    User findByUsername(String uesrname) throws ServiceException;
 }

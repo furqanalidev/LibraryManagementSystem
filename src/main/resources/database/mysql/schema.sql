@@ -21,17 +21,17 @@ CREATE TABLE `Book` (
   `title` VARCHAR(255) NOT NULL,
   `author` VARCHAR(100) NOT NULL,
   `publisher` VARCHAR(100) NOT NULL,
-  `language_id` INT NOT NULL,
+  `languageId` INT NOT NULL,
   `year` YEAR NOT NULL,
   `availableCopies` INT NOT NULL,
-  `genre_id` INT NOT NULL,
+  `genreId` INT NOT NULL,
   `isBorrowable` TINYINT(1) NOT NULL,
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UQ_isbn` (`isbn`),
-  CONSTRAINT `FK_Book_Language` FOREIGN KEY (`language_id`) REFERENCES `Language` (`id`) ON DELETE RESTRICT,
-  CONSTRAINT `FK_Book_Genre` FOREIGN KEY (`genre_id`) REFERENCES `Genre` (`id`) ON DELETE RESTRICT
+  CONSTRAINT `FK_Book_Language` FOREIGN KEY (`languageId`) REFERENCES `Language` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `FK_Book_Genre` FOREIGN KEY (`genreId`) REFERENCES `Genre` (`id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `Magazine` (

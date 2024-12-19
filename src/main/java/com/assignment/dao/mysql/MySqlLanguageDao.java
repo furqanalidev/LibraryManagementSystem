@@ -2,6 +2,9 @@ package com.assignment.dao.mysql;
 
 import com.assignment.dao.LanguageDao;
 import com.assignment.data.Language;
+import com.assignment.service.ServiceException;
+import com.assignment.service.impl.DatabaseConnectionServiceImpl;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +30,22 @@ public class MySqlLanguageDao implements LanguageDao {
     private static final String SELECT_BY_NAME = 
         "SELECT * FROM Language WHERE name = ?";
 
-    private final Connection connection;
+    private Connection connection;
+
+    
 
     public MySqlLanguageDao(Connection connection) {
         this.connection = connection;
+    }
+
+    public MySqlLanguageDao() {
+        this.connection = null;
+        try {
+            Connection conn = DatabaseConnectionServiceImpl.newConnection();
+            this.connection = conn;
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

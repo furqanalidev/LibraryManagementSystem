@@ -53,4 +53,12 @@ public interface LanguageService {
      * @throws ServiceException if operation fails
      */
     Language findByName(String name) throws ServiceException;
+
+    /**
+     * Finds a language by ID.
+     * @param id the ID of the language to find
+     * @return the found language
+     * @throws ServiceException if operation fails
+     */
+    Language findById(int id) throws ServiceException;
 }

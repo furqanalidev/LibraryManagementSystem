@@ -23,6 +23,7 @@ public class MySqlStaffDao implements StaffDao {
     private static final String SELECT_BY_CNIC = "SELECT * FROM Staff WHERE cnic = ?";
     private static final String SELECT_BY_CONTACT = "SELECT * FROM Staff WHERE contact = ?";
     private static final String SELECT_BY_OCCUPATION = "SELECT * FROM Staff WHERE occupation = ?";
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM Staff WHERE username = ?";
 
     private final Connection connection;
 
@@ -134,9 +135,22 @@ public class MySqlStaffDao implements StaffDao {
         return Optional.empty();
     }
 
+    @Override
+    public Optional<Staff> findByUsername(String username) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(SELECT_BY_USERNAME)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(extractStaffFromResultSet(rs));
+            }
+        }
+        return Optional.empty();
+    }
+
     private Staff extractStaffFromResultSet(ResultSet rs) throws SQLException {
         return new Staff(
                 rs.getInt("id"),
+                rs.getString("username"),
                 rs.getString("firstName"),
                 rs.getString("lastName"),
                 rs.getLong("cnic"),

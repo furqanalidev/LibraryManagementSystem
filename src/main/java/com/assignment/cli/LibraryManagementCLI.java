@@ -16,10 +16,7 @@ public class LibraryManagementCLI {
 
     public LibraryManagementCLI() {
         this.scanner = new Scanner(System.in);
-        String url = "jdbc:mysql://localhost:3307/library";
-        String username = "root";
-        String password = "rootpass";
-        this.serviceFactory = new ServiceFactory(url, username, password);
+        this.serviceFactory = new ServiceFactory();
         
         // Initialize handlers
         this.bookHandler = new BookOperationHandler(serviceFactory, scanner);
