@@ -86,7 +86,7 @@ public class StaffOperationHandler {
                     occupation = Staff.Occupation.LIBRARIAN;
                     break;
                 case 2:
-                    occupation = Staff.Occupation.ASSISTANT;
+                    occupation = Staff.Occupation.MANAGER;
                     break;
                 case 3:
                     occupation = Staff.Occupation.ADMIN;
@@ -174,7 +174,7 @@ public class StaffOperationHandler {
                     occupation = Staff.Occupation.LIBRARIAN;
                     break;
                 case 2:
-                    occupation = Staff.Occupation.ASSISTANT;
+                    occupation = Staff.Occupation.MANAGER;
                     break;
                 case 3:
                     occupation = Staff.Occupation.ADMIN;

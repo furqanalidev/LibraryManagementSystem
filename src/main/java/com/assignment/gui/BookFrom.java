@@ -188,7 +188,6 @@ public class BookFrom extends javax.swing.JDialog {
         language = new javax.swing.JComboBox<>();
         genre = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
         setLocationByPlatform(true);
         setResizable(false);
@@ -441,9 +440,10 @@ public class BookFrom extends javax.swing.JDialog {
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
+                        dialog.dispose();
                     }
                 });
+                
                 dialog.setVisible(true);
             }
         });

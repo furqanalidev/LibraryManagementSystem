@@ -16,10 +16,10 @@ public class Staff extends Person {
      * Each role carries different responsibilities and access levels.
      */
     public enum Occupation {
-        /** Manages library operations and has full system access */
+        /** Manages library operations and has limited system access */
         LIBRARIAN,
-        /** Helps with day-to-day operations with limited access */
-        ASSISTANT,
+        /** Manages all library operations and system administration */
+        MANAGER,
         /** System administrator with technical access rights */
         ADMIN
     }

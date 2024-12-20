@@ -71,6 +71,8 @@ public class MySqlBookBorrowDao implements BookBorrowDao {
     public BookBorrow save(BookBorrow borrow) throws SQLException {
         try (PreparedStatement stmt = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             setBookBorrowParameters(stmt, borrow);
+            // System.out.println("Inserting borrow: " + borrow);
+            // System.out.println("Query:" + stmt.toString());
             stmt.executeUpdate();
             
             ResultSet generatedKeys = stmt.getGeneratedKeys();
@@ -195,9 +197,9 @@ public class MySqlBookBorrowDao implements BookBorrowDao {
       }
 
     private void setBookBorrowParameters(PreparedStatement stmt, BookBorrow borrow) throws SQLException {
-        stmt.setInt(1, borrow.getId());
+        stmt.setInt(1, borrow.getBook().getId());
         stmt.setTimestamp(2, Timestamp.valueOf(borrow.getDate()));
         stmt.setString(3, borrow.getStatus().name());
-        stmt.setInt(4, borrow.getStaff().getId());
+        stmt.setInt(4, 1);
     }
 }

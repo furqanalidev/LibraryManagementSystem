@@ -73,4 +73,13 @@ public class StaffServiceImpl implements StaffService {
             throw new ServiceException("Error while finding staff member by username", e);
         }
     }
+
+    @Override
+    public List<Staff> findAll() throws ServiceException {
+        try {
+            return staffDao.findAll();
+        } catch (SQLException e) {
+            throw new ServiceException("Failed to find all staff members", e);
+        }
+    }
 }

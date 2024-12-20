@@ -14,4 +14,8 @@ public enum DrawMode {
     READ,
     USERDISPLAY,
     STAFFDISPLAY,
+    LIBRARIAN,
+    ADMIN,
+    MANAGER,
+    USER,
 }

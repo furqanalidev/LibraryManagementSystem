@@ -4,15 +4,19 @@
  */
 package com.assignment.gui;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
 import com.assignment.dao.CredentialsDao;
+import com.assignment.data.Credential;
 import com.assignment.dao.mysql.MySqlCredentialsDao;
 import com.assignment.data.Person;
-import com.assignment.data.Staff;
-import com.assignment.service.DatabaseConnectionService;
 import com.assignment.service.ServiceException;
 import com.assignment.service.ServiceFactory;
 import com.assignment.service.impl.DatabaseConnectionServiceImpl;
@@ -25,6 +29,8 @@ import com.formdev.flatlaf.ui.FlatRoundBorder;
  */
 public class LoginForm extends javax.swing.JDialog {
     private final ServiceFactory serviceFactory = new ServiceFactory();
+    private static final String LAST_LOGIN_FILE = "C:\\Users\\meher\\Downloads\\librarymanagementsystem\\last_login.txt";
+    private Credential lastLoginCredentials;
 
     /**
      * Creates new form LoginForm
@@ -32,6 +38,7 @@ public class LoginForm extends javax.swing.JDialog {
     public LoginForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        loadLastLogin();
     }
 
     /**
@@ -164,9 +171,10 @@ public class LoginForm extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(rootPane, password + "\n" + uesrname);
                 JOptionPane.showMessageDialog(null, "Invalid username or password");
             } else {
-                JOptionPane.showMessageDialog(null, "Login successful");
+                saveLastLogin(uesrname, password);
                 LoginForm.this.dispose();
-                MainWindow.main(null, person, null);
+                MainWindow.main(null, person);
+                JOptionPane.showMessageDialog(null, "Login successful");
             }
         } catch (ServiceException e) {
             e.printStackTrace();
@@ -182,6 +190,27 @@ public class LoginForm extends javax.swing.JDialog {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void saveLastLogin(String username, String password) {
+        Credential creds = new Credential(username, password);
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(LAST_LOGIN_FILE))) {
+            oos.writeObject(creds);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadLastLogin() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(LAST_LOGIN_FILE))) {
+            lastLoginCredentials = (Credential) ois.readObject();
+            if (lastLoginCredentials != null) {
+                jTextField1.setText(lastLoginCredentials.getUsername());
+                jPasswordField1.setText(lastLoginCredentials.getPassword());
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            // First time use - no saved credentials
+        }
+    }
 
     /**
      * @param args the command line arguments

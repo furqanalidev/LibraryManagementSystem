@@ -1,6 +1,8 @@
 package com.assignment.dao;
 
 import com.assignment.data.User;
+
+import java.util.List;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -48,4 +50,5 @@ public interface UserDao extends Dao<User> {
      */
     boolean updateBorrowings(int userId, int borrowings) throws SQLException;
     Optional<User> findByUsername(String username) throws SQLException;
+    List<User> findAll() throws SQLException;
 }

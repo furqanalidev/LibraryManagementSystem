@@ -16,7 +16,7 @@ public class MagazinePanel extends javax.swing.JPanel {
     /**
      * Creates new form MagazinePanel
      */
-    public MagazinePanel(Magazine magazine) {
+    public MagazinePanel(Magazine magazine, DrawMode drawMode) {
         initComponents();
         title.setText(magazine.getTitle());
         language.removeAllItems();
@@ -25,7 +25,20 @@ public class MagazinePanel extends javax.swing.JPanel {
         genre.addItem(magazine.getGenre().getName());
         copies.setText(Integer.toString(magazine.getAvailableCopies()));
         borrowable.setSelected(magazine.isBorrowable());
-        borrowButton.setVisible(magazine.isBorrowable());
+        button.setVisible(magazine.isBorrowable());
+        switch (drawMode) {
+            case LIBRARIAN:
+            case MANAGER:
+            case ADMIN:
+                button.setText("Update");
+                break;
+        
+            case USER:
+                button.setText("Borrow");
+                removeButton.setVisible(false);
+            default:
+                break;
+        }
     }
 
     /**
@@ -44,10 +57,11 @@ public class MagazinePanel extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         title = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        borrowButton = new javax.swing.JButton();
+        button = new javax.swing.JButton();
         language = new javax.swing.JComboBox<>();
         borrowable = new javax.swing.JCheckBox();
         copies = new javax.swing.JTextField();
+        removeButton = new javax.swing.JButton();
 
         setBorder(new FlatRoundBorder());
 
@@ -69,7 +83,7 @@ public class MagazinePanel extends javax.swing.JPanel {
 
         jLabel6.setText("Genre");
 
-        borrowButton.setText("Borrow");
+        button.setText("Borrow");
 
         language.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         language.setEnabled(false);
@@ -87,6 +101,8 @@ public class MagazinePanel extends javax.swing.JPanel {
         copies.setEditable(false);
         copies.setBorder(new FlatRoundBorder());
         copies.setFocusable(false);
+
+        removeButton.setText("Remove");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -108,8 +124,10 @@ public class MagazinePanel extends javax.swing.JPanel {
                     .addComponent(copies)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(borrowable, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
-                        .addComponent(borrowButton)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(removeButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(button)))
                 .addGap(45, 45, 45))
         );
         layout.setVerticalGroup(
@@ -131,12 +149,14 @@ public class MagazinePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(copies, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(borrowButton)
                     .addComponent(borrowable)
-                    .addComponent(jLabel9))
-                .addContainerGap(19, Short.MAX_VALUE))
+                    .addComponent(jLabel9)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(button)
+                        .addComponent(removeButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -146,8 +166,8 @@ public class MagazinePanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton borrowButton;
     private javax.swing.JCheckBox borrowable;
+    private javax.swing.JButton button;
     private javax.swing.JTextField copies;
     private javax.swing.JComboBox<String> genre;
     private javax.swing.JLabel jLabel2;
@@ -156,6 +176,7 @@ public class MagazinePanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JComboBox<String> language;
+    private javax.swing.JButton removeButton;
     private javax.swing.JTextField title;
     // End of variables declaration//GEN-END:variables
 }

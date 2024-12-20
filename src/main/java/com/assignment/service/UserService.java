@@ -56,4 +56,5 @@ public interface UserService {
      */
     User findByCnic(long cnic) throws ServiceException;
     User findByUsername(String uesrname) throws ServiceException;
+    List<User> findAll() throws ServiceException;
 }

@@ -88,4 +88,13 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Failed to find user by username", e);
         }
     }
+
+    @Override
+    public List<User> findAll() throws ServiceException {
+        try {
+            return userDao.findAll();
+        } catch (SQLException e) {
+            throw new ServiceException("Failed to fetch all users", e);
+        }
+    }
 }

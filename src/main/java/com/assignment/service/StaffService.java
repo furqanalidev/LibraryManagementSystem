@@ -46,4 +46,5 @@ public interface StaffService {
      */
     List<Staff> findByOccupation(Staff.Occupation occupation) throws ServiceException;
     Staff findByUsername(String uesrname) throws ServiceException;
+    List<Staff> findAll() throws ServiceException;
 }

@@ -36,9 +36,9 @@ INSERT INTO `Magazine` (`title`, `availableCopies`, `isBorrowable`, `genreId`, `
 
 -- Insert into Staff table
 INSERT INTO `Staff` (`username`, `firstName`, `lastName`, `cnic`, `address`, `contact`, `email`, `occupation`) VALUES 
-('librarian1', 'Alice', 'Smith', 1234567890123, '123 Library St.', '123-456-7890', 'alice.smith@example.com', 'LIBRARIAN'),
-('assistant1', 'Bob', 'Johnson', 1234567890124, '456 Library Lane', '123-456-7891', 'bob.johnson@example.com', 'ASSISTANT'),
-('admin1', 'Charlie', 'Brown', 1234567890125, '789 Library Ave.', '123-456-7892', 'charlie.brown@example.com', 'ADMIN');
+('librarian', 'Alice', 'Smith', 1234567890123, '123 Library St.', '123-456-7890', 'alice.smith@example.com', 'LIBRARIAN'),
+('manager', 'Bob', 'Johnson', 1234567890124, '456 Library Lane', '123-456-7891', 'bob.johnson@example.com', 'MANAGER'),
+('admin', 'Charlie', 'Brown', 1234567890125, '789 Library Ave.', '123-456-7892', 'charlie.brown@example.com', 'ADMIN');
 
 
 -- Insert into User table
@@ -50,10 +50,10 @@ INSERT INTO `User` (`username`, `firstName`, `lastName`, `cnic`, `address`, `con
 
 -- Insert into Credentials table
 INSERT INTO `Credentials` (`username`, `password`) VALUES 
-('librarian1', 'securepassword1'),
-('assistant1', 'securepassword2'),
-('admin1', 'securepassword3'),
-('user1', 'userpassword1'),
+('librarian', 'librarian'),
+('manager', 'manager'),
+('admin', 'admin'),
+('user', 'user'),
 ('user2', 'userpassword2'),
 ('user3', 'userpassword3');
 

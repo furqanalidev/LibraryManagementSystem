@@ -207,6 +207,7 @@ public class MySqlBookDao implements BookDao {
             GenreDao genreDao = new MySqlGenreDao(DatabaseConnectionServiceImpl.newConnection());
             GenreService genreService = new GenreServiceImpl(genreDao);
             Genre genre = genreService.findById(rs.getInt("genreId"));
+            //System.out.println(rs.getInt("id"));
             return new Book(
                 rs.getInt("id"),
                 rs.getString("isbn"),

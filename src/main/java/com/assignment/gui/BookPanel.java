@@ -5,7 +5,36 @@
 package com.assignment.gui;
 
 
+import java.time.Year;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import com.assignment.dao.BookBorrowDao;
+import com.assignment.dao.BookDao;
+import com.assignment.dao.GenreDao;
+import com.assignment.dao.LanguageDao;
+import com.assignment.dao.UserBookBorrowDao;
+import com.assignment.dao.mysql.MySqlBookBorrowDao;
+import com.assignment.dao.mysql.MySqlBookDao;
+import com.assignment.dao.mysql.MySqlGenreDao;
+import com.assignment.dao.mysql.MySqlLanguageDao;
+import com.assignment.dao.mysql.MySqlUserBookBorrowDao;
 import com.assignment.data.Book;
+import com.assignment.data.GeneralEntity;
+import com.assignment.data.Genre;
+import com.assignment.data.Language;
+import com.assignment.service.BookService;
+import com.assignment.service.BorrowService;
+import com.assignment.service.DatabaseConnectionService;
+import com.assignment.service.GenreService;
+import com.assignment.service.LanguageService;
+import com.assignment.service.impl.BookServiceImpl;
+import com.assignment.service.impl.BorrowServiceImpl;
+import com.assignment.service.impl.DatabaseConnectionServiceImpl;
+import com.assignment.service.impl.GenreServiceImpl;
+import com.assignment.service.impl.LanguageServiceImpl;
 import com.formdev.flatlaf.ui.FlatRoundBorder;
 
 /**
@@ -13,24 +42,110 @@ import com.formdev.flatlaf.ui.FlatRoundBorder;
  * @author meher
  */
 public class BookPanel extends javax.swing.JPanel {
+    private Book book;
     /**
      * Creates new form BookPanel
      * @param book Book to be displayed
      */
-    public BookPanel(Book book) {
+    public BookPanel(Book book, DrawMode drawMode) {
         initComponents();
+        this.book = book;
+        setAllText(book);
+        switch (drawMode) {
+            case LIBRARIAN:
+            case MANAGER:
+            case ADMIN:
+                button.setText("Update");
+                setAllEditable(true);
+                setAllFocusable(true);
+                loadComboBoxes();
+                break;
+        
+            case USER:
+                button.setText("Borrow");
+                removeButton.setVisible(false);
+            default:
+                break;
+        }
+    }
+
+        private void setAllEditable(boolean editable) {
+        isbn.setEditable(editable);
+        title.setEditable(editable);
+        author.setEditable(editable);
+        publisher.setEditable(editable);
+        year.setEditable(editable);
+        copies.setEditable(editable);
+        borrowable.setEnabled(editable);
+        //language.setEditable(editable);
+        //genre.setEditable(editable);
+        language.setEnabled(editable);
+        genre.setEnabled(editable);
+    }
+
+    private void setAllFocusable(boolean focusable) {
+        isbn.setFocusable(focusable);
+        title.setFocusable(focusable);
+        author.setFocusable(focusable);
+        publisher.setFocusable(focusable);
+        year.setFocusable(focusable);
+        copies.setFocusable(focusable);
+        borrowable.setFocusable(focusable);
+        language.setFocusable(focusable);
+        genre.setFocusable(focusable);
+    }
+
+    private boolean setAllText(Book book) {
         isbn.setText(book.getIsbn());
         title.setText(book.getTitle());
         author.setText(book.getAuthor());
         publisher.setText(book.getPublisher());
+        year.setText(book.getYear().toString());
+        copies.setText(Integer.toString(book.getAvailableCopies()));
+        borrowable.setSelected(book.isBorrowable());
         language.removeAllItems();
         language.addItem(book.getLanguage().getName());
         genre.removeAllItems();
         genre.addItem(book.getGenre().getName());
-        year.setText(book.getYear().toString());
-        copies.setText(Integer.toString(book.getAvailableCopies()));
-        borrowable.setSelected(book.isBorrowable());
-        borrowButton.setVisible(book.isBorrowable());
+        return true;
+    }
+
+    private boolean loadComboBoxes() {
+        loadGenre();
+        loadLanguage();
+        return true;
+    }
+
+    private boolean loadGenre() {
+        try {
+            DatabaseConnectionService databaseConnectionService = new DatabaseConnectionServiceImpl();
+            GenreDao genreDao = new MySqlGenreDao(databaseConnectionService.getConnection());
+            GenreService genreService = new GenreServiceImpl(genreDao);
+            List<Genre> genres = genreService.getAllGenres();
+            for (Genre genrefromdb : genres) {
+                genre.addItem(genrefromdb.getName());
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean loadLanguage() {
+        try {
+            DatabaseConnectionService databaseConnectionService = new DatabaseConnectionServiceImpl();
+            LanguageDao languageDao = new MySqlLanguageDao(databaseConnectionService.getConnection());
+            LanguageService languageService = new LanguageServiceImpl(languageDao);
+            List<Language> languages = languageService.getAllLanguages();
+            for (Language languagefromdb : languages) {
+                language.addItem(languagefromdb.getName());
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
     
 
@@ -61,7 +176,8 @@ public class BookPanel extends javax.swing.JPanel {
         borrowable = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         language = new javax.swing.JComboBox<>();
-        borrowButton = new javax.swing.JButton();
+        button = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
 
         setBorder(new FlatRoundBorder());
 
@@ -130,7 +246,19 @@ public class BookPanel extends javax.swing.JPanel {
         language.setEnabled(false);
         language.setFocusable(false);
 
-        borrowButton.setText("Borrow");
+        button.setText("Borrow");
+        button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonActionPerformed(evt);
+            }
+        });
+
+        removeButton.setText("Remove");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -155,8 +283,10 @@ public class BookPanel extends javax.swing.JPanel {
                     .addComponent(author)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(borrowable, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                        .addComponent(borrowButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(removeButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(button))
                     .addComponent(publisher)
                     .addComponent(language, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(genre, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -201,10 +331,12 @@ public class BookPanel extends javax.swing.JPanel {
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(borrowButton)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(button)
+                        .addComponent(removeButton))
                     .addComponent(borrowable)
                     .addComponent(jLabel9))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -213,14 +345,70 @@ public class BookPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_isbnActionPerformed
 
     private void borrowableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowableActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_borrowableActionPerformed
 
+    private void buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonActionPerformed
+        try {
+            DatabaseConnectionService db = new DatabaseConnectionServiceImpl();
+            BookDao bookDao = new MySqlBookDao(db.getConnection());
+            switch (button.getText()) {
+                case "Update":
+                    BookService bookService = new BookServiceImpl(bookDao);
+                    Book updatedBook = new Book(book.getId(), isbn.getText(), title.getText(), author.getText(),
+                            publisher.getText(),
+                            new Language(language.getSelectedIndex() + 1, language.getSelectedItem().toString()),
+                            Year.of(Integer.parseInt(year.getText())), Integer.parseInt(copies.getText()),
+                            new Genre(genre.getSelectedIndex() + 1, genre.getSelectedItem().toString()),
+                            borrowable.isSelected());
+                    if (book.equals(updatedBook)) {
+                        JOptionPane.showMessageDialog(null, "No changes made");
+                        return;
+                    }
+                    if (bookService.updateBook(updatedBook)) {
+                        ((MainWindow)SwingUtilities.getWindowAncestor(this)).refreshBooks();
+                        JOptionPane.showMessageDialog(null, "Book Updated");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Book not found");
+                    }
+
+                case "Borrow":
+                    BookBorrowDao bookBorrowDao = new MySqlBookBorrowDao(db.getConnection());
+                    UserBookBorrowDao userBookBorrowDao = new MySqlUserBookBorrowDao(db.getConnection());
+                    BorrowService bookBorrowService = new BorrowServiceImpl(bookBorrowDao, null, userBookBorrowDao, null, bookDao, null);
+                    bookBorrowService.borrowBook(((MainWindow)SwingUtilities.getWindowAncestor(this)).getUser(), this.book, null);
+                    ((MainWindow)SwingUtilities.getWindowAncestor(this)).refreshBooks();
+                    JOptionPane.showMessageDialog(null, "Book Borrowed");
+                    break;
+
+                default:
+                    System.exit(0);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_buttonActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        try {
+            DatabaseConnectionService db = new DatabaseConnectionServiceImpl();
+            BookDao bookDao = new MySqlBookDao(db.getConnection());
+            BookService bookService = new BookServiceImpl(bookDao);
+            if (bookService.removeBook(book.getId())) {
+                ((MainWindow)SwingUtilities.getWindowAncestor(this)).refreshBooks();
+                JOptionPane.showMessageDialog(this, "Successfully Removed!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error removing Book!");
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_removeButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField author;
-    private javax.swing.JButton borrowButton;
     private javax.swing.JCheckBox borrowable;
+    private javax.swing.JButton button;
     private javax.swing.JTextField copies;
     private javax.swing.JComboBox<String> genre;
     private javax.swing.JTextField isbn;
@@ -235,6 +423,7 @@ public class BookPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JComboBox<String> language;
     private javax.swing.JTextField publisher;
+    private javax.swing.JButton removeButton;
     private javax.swing.JTextField title;
     private javax.swing.JTextField year;
     // End of variables declaration//GEN-END:variables
