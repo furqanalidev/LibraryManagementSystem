@@ -4,7 +4,13 @@
  */
 package com.assignment.gui;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import com.assignment.data.Staff;
+import com.assignment.data.Staff.Occupation;
+import com.assignment.service.ServiceException;
+import com.assignment.service.ServiceFactory;
+import com.assignment.service.StaffService;
 import com.formdev.flatlaf.ui.FlatRoundBorder;
 
 /**
@@ -12,12 +18,39 @@ import com.formdev.flatlaf.ui.FlatRoundBorder;
  * @author meher
  */
 public class StaffPanel extends javax.swing.JPanel {
+    Staff staff;
+    DrawMode drawMode;
 
     /**
      * Creates new form StaffPanel
      */
+    @SuppressWarnings("incomplete-switch")
     public StaffPanel(Staff staff, DrawMode drawMode) {
         initComponents();
+        this.staff = staff;
+        this.drawMode = drawMode;
+        switch (drawMode) {
+            case UPDATE:
+                button.setText("Update");
+                setAllText(staff);
+                setAllEditable();
+                setAllFocusable();
+                loadOccupation();
+                username.setEditable(false);
+                break;
+            
+            case CREATE:
+                button.setText("Add");
+                setAllEditable();
+                setAllFocusable();
+                occupation.removeAllItems();
+                removeButton.setVisible(false);
+                loadOccupation();
+                break;
+        }
+    }
+
+    private void setAllText(Staff staff) {
         username.setText(staff.getUsername());
         firstName.setText(staff.getFirstName());
         lastName.setText(staff.getLastName());
@@ -27,19 +60,38 @@ public class StaffPanel extends javax.swing.JPanel {
         email.setText(staff.getEmail());
         occupation.removeAllItems();
         occupation.addItem(staff.getOccupation().toString());
-        switch (drawMode) {
-            case LIBRARIAN:
-            case MANAGER:
-            case ADMIN:
-                button.setText("Update");
-                break;
-        
-            case USER:
-                button.setText("Borrow");
-                removeButton.setVisible(false);
-            default:
-                break;
+    }
+
+    private void setAllEditable() {
+        username.setEditable(true);
+        firstName.setEditable(true);
+        lastName.setEditable(true);
+        cnic.setEditable(true);
+        address.setEditable(true);
+        contact.setEditable(true);
+        email.setEditable(true);
+        occupation.setEnabled(true);
+    }
+
+    private void setAllFocusable() {
+        username.setFocusable(true);
+        firstName.setFocusable(true);
+        lastName.setFocusable(true);
+        cnic.setFocusable(true);
+        address.setFocusable(true);
+        contact.setFocusable(true);
+        email.setFocusable(true);
+        occupation.setEnabled(true);
+    }
+
+    private void loadOccupation() {
+        //occupation.removeAllItems();
+        for (Occupation o : Occupation.values()) {
+            if (occupation.getSelectedItem() != o.toString()) {
+                occupation.addItem(o.toString());
+            }
         }
+        
     }
 
     /**
@@ -132,9 +184,21 @@ public class StaffPanel extends javax.swing.JPanel {
         contact.setBorder(new FlatRoundBorder());
         contact.setFocusable(false);
 
-        button.setText("Borrow");
+        button.setBackground(new java.awt.Color(153, 153, 0));
+        button.setText("Update");
+        button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonActionPerformed(evt);
+            }
+        });
 
+        removeButton.setBackground(new java.awt.Color(204, 0, 51));
         removeButton.setText("Remove");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -214,12 +278,65 @@ public class StaffPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void firstNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_firstNameActionPerformed
 
     private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_usernameActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        // DatabaseConnectionService db = new DatabaseConnectionServiceImpl();
+        // ServiceFactory serviceFactory = new ServiceFactory();
+        // StaffService staffService = serviceFactory.getStaffService();
+        JOptionPane.showMessageDialog(null, "Functionality not implemented yet");
+    }//GEN-LAST:event_removeButtonActionPerformed
+
+    private void buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonActionPerformed
+    ServiceFactory serviceFactory = new ServiceFactory();
+    StaffService staffService = serviceFactory.getStaffService();
+    switch (this.drawMode) {
+        case CREATE:
+            Staff staff = new Staff(0, username.getText(), firstName.getText(), lastName.getText(), Long.parseLong(cnic.getText()), address.getText(), contact.getText(), email.getText(), Occupation.valueOf(occupation.getSelectedItem().toString()));
+            try {
+                staffService.registerStaff(staff);
+                try {
+                    java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+                    if (window instanceof MainWindow) {
+                        ((MainWindow) window).refreshStaff();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    JOptionPane.showMessageDialog(null, "Staff registered successfully");
+                }
+            } catch (ServiceException e) {
+                e.printStackTrace();
+            }
+            break;
+
+        case UPDATE:
+            Staff updatedStaff = new Staff(this.staff.getId(), username.getText(), firstName.getText(), lastName.getText(), Long.parseLong(cnic.getText()), address.getText(), contact.getText(), email.getText(), Occupation.valueOf(occupation.getSelectedItem().toString()));
+            if (updatedStaff.equals(this.staff)) {
+                JOptionPane.showMessageDialog(null, "No changes were made");
+            } else {
+                try {
+                    staffService.updateStaff(updatedStaff);
+                    java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+                    if (window instanceof MainWindow) {
+                        ((MainWindow) window).refreshStaff();
+                    }
+                    JOptionPane.showMessageDialog(null, "Staff updated successfully");
+                } catch (ServiceException e) {
+                    e.printStackTrace();
+                }
+            }
+            break;
+
+        default:
+            break;
+    }
+}//GEN-LAST:event_buttonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

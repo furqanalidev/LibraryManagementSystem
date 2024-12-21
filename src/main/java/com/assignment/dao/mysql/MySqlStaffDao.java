@@ -16,7 +16,7 @@ public class MySqlStaffDao implements StaffDao {
 
     private static final String SELECT_BY_ID = "SELECT * FROM Staff WHERE id = ?";
     private static final String SELECT_ALL = "SELECT * FROM Staff";
-    private static final String INSERT = "INSERT INTO Staff (firstName, lastName, cnic, address, contact, email, occupation) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO Staff (username, firstName, lastName, cnic, address, contact, email, occupation) VALUES (?,?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE Staff SET firstName = ?, lastName = ?, cnic = ?, address = ?, contact = ?, email = ?, occupation = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM Staff WHERE id = ?";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM Staff WHERE email = ?";
@@ -162,12 +162,13 @@ public class MySqlStaffDao implements StaffDao {
     }
 
     private void setStaffParameters(PreparedStatement stmt, Staff staff) throws SQLException {
-        stmt.setString(1, staff.getFirstName());
-        stmt.setString(2, staff.getLastName());
-        stmt.setLong(3, staff.getCnic());
-        stmt.setString(4, staff.getAddress());
-        stmt.setString(5, staff.getContact());
-        stmt.setString(6, staff.getEmail());
-        stmt.setString(7, staff.getOccupation().name());
+        stmt.setString(1, staff.getUsername());
+        stmt.setString(2, staff.getFirstName());
+        stmt.setString(3, staff.getLastName());
+        stmt.setLong(4, staff.getCnic());
+        stmt.setString(5, staff.getAddress());
+        stmt.setString(6, staff.getContact());
+        stmt.setString(7, staff.getEmail());
+        stmt.setString(8, staff.getOccupation().name());
     }
 }

@@ -4,10 +4,13 @@
  */
 package com.assignment.gui;
 
+import java.awt.Frame;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.border.Border;
 
 import com.assignment.data.Person;
 import com.assignment.data.Staff;
@@ -15,6 +18,7 @@ import com.assignment.data.User;
 import com.assignment.service.ServiceException;
 import com.assignment.service.ServiceFactory;
 import com.assignment.theme.myTheme;
+import com.assignment.gui.MagazinePanel;
 
 /**
  *
@@ -36,21 +40,19 @@ public class MainWindow extends javax.swing.JFrame {
             switch (staff.getOccupation()) {
                 case ADMIN:
                     drawMode = DrawMode.ADMIN;
-                    myTab.remove(userTab);
-                    myTab.remove(staffTab);
                     break;
+
                 case LIBRARIAN:
                     drawMode = DrawMode.LIBRARIAN;
                     myTab.remove(userTab);
                     
                     break;
+
                 case MANAGER:
-                    drawMode = DrawMode.MANAGER;
-                    myTab.remove(userTab);
-                    
+                    drawMode = DrawMode.MANAGER;                    
                     break;
+
                 default:
-                    
                     myTab.remove(staffTab);
                     break;
             }
@@ -59,6 +61,9 @@ public class MainWindow extends javax.swing.JFrame {
             myTab.remove(userTab);
             myTab.remove(staffTab);
             addBookButton.setVisible(false);
+            addMagazineButton.setVisible(false);
+            addUserButton.setVisible(false);
+            addStaffButton.setVisible(false);
         }
     }
 
@@ -92,7 +97,7 @@ public class MainWindow extends javax.swing.JFrame {
         displayStaffPanel.removeAll();
         try{
             serviceFactory.getStaffService().findAll().forEach(staff -> {
-                StaffPanel staffPanel = new StaffPanel(staff, drawMode);
+                StaffPanel staffPanel = new StaffPanel(staff, DrawMode.UPDATE);
                 displayStaffPanel.add(staffPanel);
                 displayStaffPanel.revalidate();
             });
@@ -124,6 +129,38 @@ public class MainWindow extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error refreshing books");
         }
     }
+    
+    public void refreshMagazines() {
+        try {
+            displayMagazinePanel.removeAll();
+            displayMagazines();
+            displayMagazinePanel.revalidate();
+            displayMagazinePanel.repaint();
+        } catch (ServiceException e) {
+            JOptionPane.showMessageDialog(null, "Error refreshing magazines");
+        }
+    }
+
+    public void refreshStaff() {
+        try {
+            displayStaffPanel.removeAll();
+            displayStaff();
+            displayStaffPanel.revalidate();
+            displayStaffPanel.repaint();
+        } catch (ServiceException e) {
+            JOptionPane.showMessageDialog(null, "Error refreshing staff");
+        }
+    }
+    public void refreshUsers() {
+        try {
+            displayUserPanel.removeAll();
+            displayUser();
+            displayUserPanel.revalidate();
+            displayUserPanel.repaint();
+        } catch (ServiceException e) {
+            JOptionPane.showMessageDialog(null, "Error refreshing users");
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -142,12 +179,15 @@ public class MainWindow extends javax.swing.JFrame {
         magazineTab = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         displayMagazinePanel = new javax.swing.JPanel();
+        addMagazineButton = new javax.swing.JButton();
         staffTab = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         displayStaffPanel = new javax.swing.JPanel();
+        addStaffButton = new javax.swing.JButton();
         userTab = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         displayUserPanel = new javax.swing.JPanel();
+        addUserButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Library Management System");
@@ -179,6 +219,7 @@ public class MainWindow extends javax.swing.JFrame {
         displayBookPanel.setMaximumSize(new java.awt.Dimension(1200, 32767));
         displayBookPanel.setName(""); // NOI18N
 
+        addBookButton.setBackground(new java.awt.Color(0, 102, 204));
         addBookButton.setText("Add new Book");
         addBookButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -193,22 +234,25 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(bookTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(bookTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(displayBookPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1257, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(bookTabLayout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1292, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1218, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addBookButton)
-                        .addContainerGap())))
+                        .addComponent(addBookButton))
+                    .addComponent(displayBookPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
         bookTabLayout.setVerticalGroup(
             bookTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bookTabLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(bookTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addBookButton))
-                .addGap(18, 18, 18)
-                .addComponent(displayBookPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
+                .addGroup(bookTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(bookTabLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bookTabLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(addBookButton)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(displayBookPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -228,6 +272,14 @@ public class MainWindow extends javax.swing.JFrame {
         displayMagazinePanel.setMaximumSize(new java.awt.Dimension(1200, 32767));
         displayMagazinePanel.setName(""); // NOI18N
 
+        addMagazineButton.setBackground(new java.awt.Color(0, 102, 204));
+        addMagazineButton.setText("Add new Magazine");
+        addMagazineButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMagazineButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout magazineTabLayout = new javax.swing.GroupLayout(magazineTab);
         magazineTab.setLayout(magazineTabLayout);
         magazineTabLayout.setHorizontalGroup(
@@ -235,19 +287,21 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(magazineTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(magazineTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(magazineTabLayout.createSequentialGroup()
-                        .addComponent(displayMagazinePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1402, Short.MAX_VALUE))
+                    .addComponent(displayMagazinePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1265, Short.MAX_VALUE))
+                .addGap(10, 10, 10)
+                .addComponent(addMagazineButton)
                 .addContainerGap())
         );
         magazineTabLayout.setVerticalGroup(
             magazineTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(magazineTabLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(magazineTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addMagazineButton))
                 .addGap(18, 18, 18)
-                .addComponent(displayMagazinePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(displayMagazinePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -272,6 +326,14 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        addStaffButton.setBackground(new java.awt.Color(0, 102, 204));
+        addStaffButton.setText("Add new Staff");
+        addStaffButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addStaffButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout staffTabLayout = new javax.swing.GroupLayout(staffTab);
         staffTab.setLayout(staffTabLayout);
         staffTabLayout.setHorizontalGroup(
@@ -279,18 +341,24 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(staffTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(staffTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(staffTabLayout.createSequentialGroup()
+                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addStaffButton)
+                        .addContainerGap())
                     .addGroup(staffTabLayout.createSequentialGroup()
                         .addComponent(displayStaffPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 151, Short.MAX_VALUE))))
+                        .addGap(0, 156, Short.MAX_VALUE))))
         );
         staffTabLayout.setVerticalGroup(
             staffTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(staffTabLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabel4)
+                .addGroup(staffTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(addStaffButton))
                 .addGap(18, 18, 18)
-                .addComponent(displayStaffPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(displayStaffPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -315,6 +383,14 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        addUserButton.setBackground(new java.awt.Color(0, 102, 204));
+        addUserButton.setText("Add new User");
+        addUserButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addUserButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout userTabLayout = new javax.swing.GroupLayout(userTab);
         userTab.setLayout(userTabLayout);
         userTabLayout.setHorizontalGroup(
@@ -322,18 +398,24 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(userTabLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(userTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(userTabLayout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addUserButton)
+                        .addContainerGap())
                     .addGroup(userTabLayout.createSequentialGroup()
                         .addComponent(displayUserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 151, Short.MAX_VALUE))))
+                        .addGap(0, 156, Short.MAX_VALUE))))
         );
         userTabLayout.setVerticalGroup(
             userTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(userTabLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(displayUserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE)
+                .addGroup(userTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addUserButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(displayUserPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -408,6 +490,30 @@ public class MainWindow extends javax.swing.JFrame {
         BookFrom.main(null, DrawMode.CREATE, null);
     }//GEN-LAST:event_addBookButtonActionPerformed
 
+    private void addUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addUserButtonActionPerformed
+
+    private void addStaffButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addStaffButtonActionPerformed
+        JDialog dialog = new JDialog(this, "Add new Staff", true);
+        dialog.setSize(310, 450);
+        dialog.setResizable(false);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.add(new StaffPanel(null, DrawMode.CREATE));
+        dialog.setVisible(true);
+    }//GEN-LAST:event_addStaffButtonActionPerformed
+
+    private void addMagazineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMagazineButtonActionPerformed
+        JDialog dialog = new JDialog();
+        dialog.setSize(400, 280);
+        dialog.setResizable(false);
+        dialog.setTitle("Add Magazine");
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        //dialog.setLayout(new BorderLayout());
+        dialog.add(new MagazinePanel(null, DrawMode.CREATE));
+        dialog.setVisible(true);
+    }//GEN-LAST:event_addMagazineButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -432,6 +538,9 @@ public class MainWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBookButton;
+    private javax.swing.JButton addMagazineButton;
+    private javax.swing.JButton addStaffButton;
+    private javax.swing.JButton addUserButton;
     private javax.swing.JPanel bookTab;
     private javax.swing.JPanel displayBookPanel;
     private javax.swing.JPanel displayMagazinePanel;

@@ -48,7 +48,14 @@ public class BorrowServiceImpl implements BorrowService {
         this.userMagazineBorrowDao = null;
     }
 
-
+    public BorrowServiceImpl(MagazineBorrowDao magazineBorrowDao, UserMagazineBorrowDao userMagazineBorrowDao, MagazineDao magazineDao) {
+        this.magazineBorrowDao = magazineBorrowDao;
+        this.userMagazineBorrowDao = userMagazineBorrowDao;
+        this.magazineDao = magazineDao;
+        this.bookBorrowDao = null;
+        this.userBookBorrowDao = null;
+        this.bookDao = null;
+    }
 
     @Override
     public BookBorrow borrowBook(User user, Book book, Staff staff) throws ServiceException {

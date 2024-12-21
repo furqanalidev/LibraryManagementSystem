@@ -16,7 +16,7 @@ public class MySqlUserDao implements UserDao {
 
     private static final String SELECT_BY_ID = "SELECT * FROM User WHERE id = ?";
     private static final String SELECT_ALL = "SELECT * FROM User";
-    private static final String INSERT = "INSERT INTO User (firstName, lastName, cnic, address, contact, email, borrowings, bookBorrowLimit, magazineBorrowLimit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO User (username, firstName, lastName, cnic, address, contact, email, borrowings, bookBorrowLimit, magazineBorrowLimit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE User SET firstName = ?, lastName = ?, cnic = ?, address = ?, contact = ?, email = ?, borrowings = ?, bookBorrowLimit = ?, magazineBorrowLimit = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM User WHERE id = ?";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM User WHERE email = ?";
@@ -159,14 +159,15 @@ public class MySqlUserDao implements UserDao {
     }
 
     private void setUserParameters(PreparedStatement stmt, User user) throws SQLException {
-        stmt.setString(1, user.getFirstName());
-        stmt.setString(2, user.getLastName());
-        stmt.setLong(3, user.getCnic());
-        stmt.setString(4, user.getAddress());
-        stmt.setString(5, user.getContact());
-        stmt.setString(6, user.getEmail());
-        stmt.setInt(7, user.getBorrowings());
-        stmt.setInt(8, user.getBookBorrowLimit());
-        stmt.setInt(9, user.getMagazineBorrowLimit());
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, user.getFirstName());
+        stmt.setString(3, user.getLastName());
+        stmt.setLong(4, user.getCnic());
+        stmt.setString(5, user.getAddress());
+        stmt.setString(6, user.getContact());
+        stmt.setString(7, user.getEmail());
+        stmt.setInt(8, user.getBorrowings());
+        stmt.setInt(9, user.getBookBorrowLimit());
+        stmt.setInt(10, user.getMagazineBorrowLimit());
     }
 }

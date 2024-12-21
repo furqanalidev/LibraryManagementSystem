@@ -240,7 +240,8 @@ public class BookFrom extends javax.swing.JDialog {
 
         jLabel9.setText("Borroable");
 
-        jButton1.setText("OK");
+        jButton1.setBackground(new java.awt.Color(0, 153, 0));
+        jButton1.setText("Add");
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

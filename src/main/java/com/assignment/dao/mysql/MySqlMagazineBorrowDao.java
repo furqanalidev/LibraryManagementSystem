@@ -195,6 +195,6 @@ public class MySqlMagazineBorrowDao implements MagazineBorrowDao {
         stmt.setInt(1, borrow.getMagazine().getId());
         stmt.setTimestamp(2, Timestamp.valueOf(borrow.getDate()));
         stmt.setString(3, borrow.getStatus().name());
-        stmt.setInt(4, borrow.getStaff().getId());
+        stmt.setInt(4, 1);
     }
 }

@@ -20,7 +20,7 @@ public class Magazine extends LibraryItem {
      * @param genre          genre classification
      * @param language       language of the magazine
      */
-    public Magazine(int id, String title, int availableCopies, 
+    public Magazine(int id,String title, int availableCopies, 
                    boolean isBorrowable, Genre genre, Language language) {
         super(id, title, availableCopies, isBorrowable, genre, language);
     }

@@ -4,7 +4,38 @@
  */
 package com.assignment.gui;
 
+import java.util.List;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import com.assignment.dao.BookDao;
+import com.assignment.dao.GenreDao;
+import com.assignment.dao.LanguageDao;
+import com.assignment.dao.MagazineBorrowDao;
+import com.assignment.dao.MagazineDao;
+import com.assignment.dao.UserMagazineBorrowDao;
+import com.assignment.dao.mysql.MySqlBookDao;
+import com.assignment.dao.mysql.MySqlGenreDao;
+import com.assignment.dao.mysql.MySqlLanguageDao;
+import com.assignment.dao.mysql.MySqlMagazineBorrowDao;
+import com.assignment.dao.mysql.MySqlMagazineDao;
+import com.assignment.dao.mysql.MySqlUserMagazineBorrowDao;
+import com.assignment.data.Genre;
+import com.assignment.data.Language;
 import com.assignment.data.Magazine;
+import com.assignment.service.BookService;
+import com.assignment.service.BorrowService;
+import com.assignment.service.DatabaseConnectionService;
+import com.assignment.service.GenreService;
+import com.assignment.service.LanguageService;
+import com.assignment.service.MagazineService;
+import com.assignment.service.impl.BookServiceImpl;
+import com.assignment.service.impl.BorrowServiceImpl;
+import com.assignment.service.impl.DatabaseConnectionServiceImpl;
+import com.assignment.service.impl.GenreServiceImpl;
+import com.assignment.service.impl.LanguageServiceImpl;
+import com.assignment.service.impl.MagazineServiceImpl;
 import com.formdev.flatlaf.ui.FlatRoundBorder;
 
 /**
@@ -12,12 +43,45 @@ import com.formdev.flatlaf.ui.FlatRoundBorder;
  * @author meher
  */
 public class MagazinePanel extends javax.swing.JPanel {
+    private Magazine magazine;
 
     /**
      * Creates new form MagazinePanel
      */
     public MagazinePanel(Magazine magazine, DrawMode drawMode) {
         initComponents();
+        this.magazine = magazine;
+        switch (drawMode) {
+            case LIBRARIAN:
+            case MANAGER:
+            case ADMIN:
+                button.setText("Update");
+                setAllText(magazine);
+                setAllEditable(true);
+                setAllFocusable(true);
+                loadComboBoxes();
+                break;
+
+            case CREATE:
+                button.setText("Add");
+                setAllEditable(true);
+                setAllFocusable(true);
+                removeButton.setVisible(false);
+                genre.removeAllItems();
+                language.removeAllItems();
+                loadComboBoxes();
+                break;
+        
+            case USER:
+                button.setText("Borrow");
+                setAllText(magazine);
+                removeButton.setVisible(false);
+            default:
+                break;
+        }
+    }
+
+    private void setAllText(Magazine magazine) {
         title.setText(magazine.getTitle());
         language.removeAllItems();
         language.addItem(magazine.getLanguage().getName());
@@ -26,18 +90,57 @@ public class MagazinePanel extends javax.swing.JPanel {
         copies.setText(Integer.toString(magazine.getAvailableCopies()));
         borrowable.setSelected(magazine.isBorrowable());
         button.setVisible(magazine.isBorrowable());
-        switch (drawMode) {
-            case LIBRARIAN:
-            case MANAGER:
-            case ADMIN:
-                button.setText("Update");
-                break;
-        
-            case USER:
-                button.setText("Borrow");
-                removeButton.setVisible(false);
-            default:
-                break;
+    }
+    private void setAllEditable(boolean editable) {
+        title.setEditable(editable);
+        language.setEnabled(editable);
+        genre.setEnabled(editable);
+        copies.setEditable(editable);
+        borrowable.setEnabled(editable);
+    }
+    private void setAllFocusable(boolean focusable) {
+        title.setFocusable(focusable);
+        language.setFocusable(focusable);
+        genre.setFocusable(focusable);
+        copies.setFocusable(focusable);
+        borrowable.setFocusable(focusable);
+    }
+
+    private boolean loadComboBoxes() {
+        loadGenre();
+        loadLanguage();
+        return true;
+    }
+
+    private boolean loadGenre() {
+        try {
+            DatabaseConnectionService databaseConnectionService = new DatabaseConnectionServiceImpl();
+            GenreDao genreDao = new MySqlGenreDao(databaseConnectionService.getConnection());
+            GenreService genreService = new GenreServiceImpl(genreDao);
+            List<Genre> genres = genreService.getAllGenres();
+            for (Genre genrefromdb : genres) {
+                genre.addItem(genrefromdb.getName());
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean loadLanguage() {
+        try {
+            DatabaseConnectionService databaseConnectionService = new DatabaseConnectionServiceImpl();
+            LanguageDao languageDao = new MySqlLanguageDao(databaseConnectionService.getConnection());
+            LanguageService languageService = new LanguageServiceImpl(languageDao);
+            List<Language> languages = languageService.getAllLanguages();
+            for (Language languagefromdb : languages) {
+                language.addItem(languagefromdb.getName());
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -83,7 +186,13 @@ public class MagazinePanel extends javax.swing.JPanel {
 
         jLabel6.setText("Genre");
 
+        button.setBackground(new java.awt.Color(153, 153, 0));
         button.setText("Borrow");
+        button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonActionPerformed(evt);
+            }
+        });
 
         language.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         language.setEnabled(false);
@@ -102,7 +211,13 @@ public class MagazinePanel extends javax.swing.JPanel {
         copies.setBorder(new FlatRoundBorder());
         copies.setFocusable(false);
 
+        removeButton.setBackground(new java.awt.Color(204, 0, 51));
         removeButton.setText("Remove");
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -161,8 +276,73 @@ public class MagazinePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void borrowableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowableActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_borrowableActionPerformed
+
+    private void buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonActionPerformed
+        try {
+            DatabaseConnectionService db = new DatabaseConnectionServiceImpl();
+            MagazineDao magazineDao = new MySqlMagazineDao(db.getConnection());
+            MagazineService magazineService = new MagazineServiceImpl(magazineDao);
+            switch (button.getText()) {
+                case "Add":
+                    Magazine newMagazine = new Magazine(0,title.getText(), Integer.parseInt(copies.getText()), borrowable.isSelected(),
+                                                        new Genre(genre.getSelectedIndex() + 1, genre.getSelectedItem().toString()),
+                                                        new Language(language.getSelectedIndex() + 1, language.getSelectedItem().toString()));
+                    magazineService.addMagazine(newMagazine);
+                    //((MainWindow)SwingUtilities.getWindowAncestor(this)).refreshMagazines();
+                    JOptionPane.showMessageDialog(null, "Magazine Added");
+                    break;
+
+                case "Update":
+                    //MagazineService magazineService = new MagazineServiceImpl(magazineDao);
+                    Magazine updatedMagazine = new Magazine(magazine.getId(), title.getText(), Integer.parseInt(copies.getText()), borrowable.isSelected(),
+                                                            new Genre(genre.getSelectedIndex() + 1, genre.getSelectedItem().toString()),
+                                                            new Language(language.getSelectedIndex() + 1, language.getSelectedItem().toString()));
+                    if (magazine.equals(updatedMagazine)) {
+                        JOptionPane.showMessageDialog(null, "No changes made");
+                        return;
+                    }
+                    if (magazineService.updateMagazine(updatedMagazine)) {
+                        ((MainWindow)SwingUtilities.getWindowAncestor(this)).refreshMagazines();
+                        JOptionPane.showMessageDialog(null, "Magazine Updated");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Magazine not found");
+                    }
+                    break;
+
+                case "Borrow":
+                    MagazineBorrowDao magazineBorrowDao = new MySqlMagazineBorrowDao(db.getConnection());
+                    UserMagazineBorrowDao userMagazineBorrowDao = new MySqlUserMagazineBorrowDao(db.getConnection());
+                    BorrowService magazineBorrowService = new BorrowServiceImpl(magazineBorrowDao, userMagazineBorrowDao, magazineDao);
+                    magazineBorrowService.borrowMagazine(((MainWindow)SwingUtilities.getWindowAncestor(this)).getUser(), this.magazine, null);
+                    ((MainWindow)SwingUtilities.getWindowAncestor(this)).refreshMagazines();
+                    JOptionPane.showMessageDialog(null, "Magazine Borrowed");
+                    break;
+
+                default:
+                    System.exit(0);
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_buttonActionPerformed
+
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
+        try {
+            DatabaseConnectionService db = new DatabaseConnectionServiceImpl();
+            MagazineDao magazineDao = new MySqlMagazineDao(db.getConnection());
+            MagazineService magazineService = new MagazineServiceImpl(magazineDao);
+            if (magazineService.removeMagazine(magazine.getId())) {
+                ((MainWindow)SwingUtilities.getWindowAncestor(this)).refreshMagazines();
+                JOptionPane.showMessageDialog(this, "Successfully Removed!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error removing Magazine!");
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_removeButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

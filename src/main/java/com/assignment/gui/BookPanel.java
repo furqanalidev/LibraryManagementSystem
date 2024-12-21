@@ -22,7 +22,6 @@ import com.assignment.dao.mysql.MySqlGenreDao;
 import com.assignment.dao.mysql.MySqlLanguageDao;
 import com.assignment.dao.mysql.MySqlUserBookBorrowDao;
 import com.assignment.data.Book;
-import com.assignment.data.GeneralEntity;
 import com.assignment.data.Genre;
 import com.assignment.data.Language;
 import com.assignment.service.BookService;
@@ -246,6 +245,7 @@ public class BookPanel extends javax.swing.JPanel {
         language.setEnabled(false);
         language.setFocusable(false);
 
+        button.setBackground(new java.awt.Color(153, 153, 0));
         button.setText("Borrow");
         button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -253,6 +253,7 @@ public class BookPanel extends javax.swing.JPanel {
             }
         });
 
+        removeButton.setBackground(new java.awt.Color(204, 0, 51));
         removeButton.setText("Remove");
         removeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -341,7 +342,7 @@ public class BookPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void isbnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_isbnActionPerformed
-        // TODO add your handling code here:
+       
     }//GEN-LAST:event_isbnActionPerformed
 
     private void borrowableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowableActionPerformed

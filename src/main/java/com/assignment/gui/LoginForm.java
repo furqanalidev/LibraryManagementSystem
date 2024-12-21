@@ -83,6 +83,7 @@ public class LoginForm extends javax.swing.JDialog {
 
         jPasswordField1.setBorder(new FlatRoundBorder());
 
+        jButton1.setBackground(new java.awt.Color(0, 102, 204));
         jButton1.setText("Login");
         jButton1.setBorder(new FlatRoundBorder());
         jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -168,13 +169,13 @@ public class LoginForm extends javax.swing.JDialog {
                 }
             }
             if (person == null) {
-                JOptionPane.showMessageDialog(rootPane, password + "\n" + uesrname);
+                //JOptionPane.showMessageDialog(rootPane, password + "\n" + uesrname);
                 JOptionPane.showMessageDialog(null, "Invalid username or password");
             } else {
                 saveLastLogin(uesrname, password);
                 LoginForm.this.dispose();
+                JOptionPane.showMessageDialog(this, "Login successful");
                 MainWindow.main(null, person);
-                JOptionPane.showMessageDialog(null, "Login successful");
             }
         } catch (ServiceException e) {
             e.printStackTrace();
