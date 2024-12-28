@@ -20,7 +20,7 @@ import com.assignment.data.Person;
 import com.assignment.service.ServiceException;
 import com.assignment.service.ServiceFactory;
 import com.assignment.service.impl.DatabaseConnectionServiceImpl;
-import com.assignment.theme.myTheme;
+import com.assignment.gui.theme.myTheme;
 import com.formdev.flatlaf.ui.FlatRoundBorder;
 
 /**
@@ -38,6 +38,7 @@ public class LoginForm extends javax.swing.JDialog {
     public LoginForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(null);
         loadLastLogin();
     }
 

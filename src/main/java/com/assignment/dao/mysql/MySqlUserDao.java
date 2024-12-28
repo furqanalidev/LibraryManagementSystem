@@ -17,7 +17,7 @@ public class MySqlUserDao implements UserDao {
     private static final String SELECT_BY_ID = "SELECT * FROM User WHERE id = ?";
     private static final String SELECT_ALL = "SELECT * FROM User";
     private static final String INSERT = "INSERT INTO User (username, firstName, lastName, cnic, address, contact, email, borrowings, bookBorrowLimit, magazineBorrowLimit) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE = "UPDATE User SET firstName = ?, lastName = ?, cnic = ?, address = ?, contact = ?, email = ?, borrowings = ?, bookBorrowLimit = ?, magazineBorrowLimit = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE User SET username = ?, firstName = ?, lastName = ?, cnic = ?, address = ?, contact = ?, email = ?, borrowings = ?, bookBorrowLimit = ?, magazineBorrowLimit = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM User WHERE id = ?";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM User WHERE email = ?";
     private static final String SELECT_BY_CNIC = "SELECT * FROM User WHERE cnic = ?";
@@ -73,7 +73,7 @@ public class MySqlUserDao implements UserDao {
     public boolean update(User user) throws SQLException {
         try (PreparedStatement stmt = connection.prepareStatement(UPDATE)) {
             setUserParameters(stmt, user);
-            stmt.setInt(10, user.getId());
+            stmt.setInt(11, user.getId());
             return stmt.executeUpdate() > 0;
         }
     }

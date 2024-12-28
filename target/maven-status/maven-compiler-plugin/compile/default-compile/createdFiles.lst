@@ -1,9 +1,13 @@
-com\assignment\gui\BookFrom$4.class
 com\assignment\gui\LoginForm.class
-com\assignment\theme\myTheme.class
+com\assignment\gui\panels\StaffPanel$6.class
 com\assignment\gui\LoginForm$4$1.class
+com\assignment\gui\panels\BookFrom$5.class
 com\assignment\gui\LoginForm$2.class
 com\assignment\gui\LoginForm$3.class
 com\assignment\gui\LoginForm$4.class
-com\assignment\gui\BookFrom$5.class
+com\assignment\gui\panels\MagazinePanel$4.class
+com\assignment\gui\MainWindow$16.class
 com\assignment\gui\LoginForm$1.class
+com\assignment\gui\panels\BorrowPanel$6.class
+com\assignment\gui\panels\UserPanel$6.class
+com\assignment\gui\panels\BookPanel$5.class
