@@ -95,6 +95,7 @@ public class BookPanel extends javax.swing.JPanel {
     }
 
     private boolean setAllText(Book book) {
+        bookNo.setText("Book No. " + book.getId());
         isbn.setText(book.getIsbn());
         title.setText(book.getTitle());
         author.setText(book.getAuthor());
@@ -177,6 +178,7 @@ public class BookPanel extends javax.swing.JPanel {
         language = new javax.swing.JComboBox<>();
         button = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
+        bookNo = new javax.swing.JLabel();
 
         setBorder(new FlatRoundBorder());
 
@@ -261,6 +263,11 @@ public class BookPanel extends javax.swing.JPanel {
             }
         });
 
+        bookNo.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        bookNo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        bookNo.setText("Book No. ");
+        bookNo.setFocusable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -294,11 +301,14 @@ public class BookPanel extends javax.swing.JPanel {
                     .addComponent(year)
                     .addComponent(copies))
                 .addGap(46, 46, 46))
+            .addComponent(bookNo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
+                .addContainerGap()
+                .addComponent(bookNo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(isbn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
@@ -408,6 +418,7 @@ public class BookPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField author;
+    private javax.swing.JLabel bookNo;
     private javax.swing.JCheckBox borrowable;
     private javax.swing.JButton button;
     private javax.swing.JTextField copies;

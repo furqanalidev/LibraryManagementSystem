@@ -17,7 +17,7 @@ public class MySqlStaffDao implements StaffDao {
     private static final String SELECT_BY_ID = "SELECT * FROM Staff WHERE id = ?";
     private static final String SELECT_ALL = "SELECT * FROM Staff";
     private static final String INSERT = "INSERT INTO Staff (username, firstName, lastName, cnic, address, contact, email, occupation) VALUES (?,?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE = "UPDATE Staff SET firstName = ?, lastName = ?, cnic = ?, address = ?, contact = ?, email = ?, occupation = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE Staff SET username = ?, firstName = ?, lastName = ?, cnic = ?, address = ?, contact = ?, email = ?, occupation = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM Staff WHERE id = ?";
     private static final String SELECT_BY_EMAIL = "SELECT * FROM Staff WHERE email = ?";
     private static final String SELECT_BY_CNIC = "SELECT * FROM Staff WHERE cnic = ?";
@@ -86,7 +86,7 @@ public class MySqlStaffDao implements StaffDao {
     public boolean update(Staff staff) throws SQLException {
         try (PreparedStatement stmt = connection.prepareStatement(UPDATE)) {
             setStaffParameters(stmt, staff);
-            stmt.setInt(8, staff.getId());
+            stmt.setInt(9, staff.getId());
             return stmt.executeUpdate() > 0;
         }
     }

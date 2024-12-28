@@ -15,4 +15,6 @@ public interface CredentialsDao {
      * @throws SQLException if a database access error occurs
      */
     boolean validate (String username, String password) throws SQLException;    
+
+    boolean create(String username, String password) throws SQLException;
 }

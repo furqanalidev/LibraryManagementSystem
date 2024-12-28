@@ -4,6 +4,7 @@
  */
 package com.assignment.gui;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import com.assignment.data.Staff;
@@ -18,8 +19,8 @@ import com.formdev.flatlaf.ui.FlatRoundBorder;
  * @author meher
  */
 public class StaffPanel extends javax.swing.JPanel {
-    Staff staff;
-    DrawMode drawMode;
+    private Staff staff;
+    private DrawMode drawMode;
 
     /**
      * Creates new form StaffPanel
@@ -30,6 +31,8 @@ public class StaffPanel extends javax.swing.JPanel {
         this.staff = staff;
         this.drawMode = drawMode;
         switch (drawMode) {
+            case ADMIN:
+            case MANAGER:
             case UPDATE:
                 button.setText("Update");
                 setAllText(staff);
@@ -37,6 +40,8 @@ public class StaffPanel extends javax.swing.JPanel {
                 setAllFocusable();
                 loadOccupation();
                 username.setEditable(false);
+                passsword.setVisible(false);
+                passwordLable.setVisible(false);
                 break;
             
             case CREATE:
@@ -51,6 +56,7 @@ public class StaffPanel extends javax.swing.JPanel {
     }
 
     private void setAllText(Staff staff) {
+        staffLabel.setText("Staff No. " + staff.getId());
         username.setText(staff.getUsername());
         firstName.setText(staff.getFirstName());
         lastName.setText(staff.getLastName());
@@ -121,6 +127,9 @@ public class StaffPanel extends javax.swing.JPanel {
         contact = new javax.swing.JTextField();
         button = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
+        passsword = new javax.swing.JTextField();
+        passwordLable = new javax.swing.JLabel();
+        staffLabel = new javax.swing.JLabel();
 
         setBorder(new FlatRoundBorder());
 
@@ -200,6 +209,20 @@ public class StaffPanel extends javax.swing.JPanel {
             }
         });
 
+        passsword.setToolTipText("");
+        passsword.setBorder(new FlatRoundBorder());
+        passsword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passswordActionPerformed(evt);
+            }
+        });
+
+        passwordLable.setText("Password");
+
+        staffLabel.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        staffLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        staffLabel.setText("Staff");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -221,7 +244,8 @@ public class StaffPanel extends javax.swing.JPanel {
                             .addComponent(jLabel3)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel8))
+                            .addComponent(jLabel8)
+                            .addComponent(passwordLable))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(firstName, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
@@ -231,16 +255,26 @@ public class StaffPanel extends javax.swing.JPanel {
                             .addComponent(address)
                             .addComponent(username, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                             .addComponent(occupation, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(contact))))
+                            .addComponent(contact)
+                            .addComponent(passsword, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))))
                 .addGap(40, 40, 40))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(staffLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addContainerGap()
+                .addComponent(staffLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(passsword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(passwordLable))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(firstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -273,7 +307,7 @@ public class StaffPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(button)
                     .addComponent(removeButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -299,16 +333,14 @@ public class StaffPanel extends javax.swing.JPanel {
         case CREATE:
             Staff staff = new Staff(0, username.getText(), firstName.getText(), lastName.getText(), Long.parseLong(cnic.getText()), address.getText(), contact.getText(), email.getText(), Occupation.valueOf(occupation.getSelectedItem().toString()));
             try {
-                staffService.registerStaff(staff);
+                staffService.registerStaff(staff, passsword.getText());
                 try {
-                    java.awt.Window window = SwingUtilities.getWindowAncestor(this);
-                    if (window instanceof MainWindow) {
-                        ((MainWindow) window).refreshStaff();
-                    }
+                    ((MainWindow) SwingUtilities.getWindowAncestor((JDialog) SwingUtilities.getWindowAncestor(this))).refreshStaff();
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
                     JOptionPane.showMessageDialog(null, "Staff registered successfully");
+                    ((JDialog) SwingUtilities.getWindowAncestor(this)).dispose();
                 }
             } catch (ServiceException e) {
                 e.printStackTrace();
@@ -316,7 +348,7 @@ public class StaffPanel extends javax.swing.JPanel {
             break;
 
         case UPDATE:
-            Staff updatedStaff = new Staff(this.staff.getId(), username.getText(), firstName.getText(), lastName.getText(), Long.parseLong(cnic.getText()), address.getText(), contact.getText(), email.getText(), Occupation.valueOf(occupation.getSelectedItem().toString()));
+            Staff updatedStaff = new Staff(this.staff.getId(), this.staff.getUsername(), firstName.getText(), lastName.getText(), Long.parseLong(cnic.getText()), address.getText(), contact.getText(), email.getText(), Occupation.valueOf(occupation.getSelectedItem().toString()));
             if (updatedStaff.equals(this.staff)) {
                 JOptionPane.showMessageDialog(null, "No changes were made");
             } else {
@@ -338,6 +370,10 @@ public class StaffPanel extends javax.swing.JPanel {
     }
 }//GEN-LAST:event_buttonActionPerformed
 
+    private void passswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passswordActionPerformed
+        // nothing to do here
+    }//GEN-LAST:event_passswordActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField address;
@@ -356,7 +392,10 @@ public class StaffPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JTextField lastName;
     private javax.swing.JComboBox<String> occupation;
+    private javax.swing.JTextField passsword;
+    private javax.swing.JLabel passwordLable;
     private javax.swing.JButton removeButton;
+    private javax.swing.JLabel staffLabel;
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 }

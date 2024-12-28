@@ -18,7 +18,7 @@ public interface UserService {
      * @return the registered user with generated ID
      * @throws ServiceException if operation fails
      */
-    User registerUser(User user) throws ServiceException;
+    User registerUser(User user, String password) throws ServiceException;
     
     /**
      * Updates user information.

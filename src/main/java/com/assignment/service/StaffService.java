@@ -17,7 +17,7 @@ public interface StaffService {
      * @return the registered staff member with generated ID
      * @throws ServiceException if operation fails
      */
-    Staff registerStaff(Staff staff) throws ServiceException;
+    Staff registerStaff(Staff staff, String password) throws ServiceException;
     
     /**
      * Updates staff member information.

@@ -98,7 +98,7 @@ public class StaffOperationHandler {
             Staff staff = new Staff(0,username, firstName, lastName, cnic, address, 
                                   contact, email, occupation);
             
-            Staff savedStaff = staffService.registerStaff(staff);
+            Staff savedStaff = staffService.registerStaff(staff, null);
             System.out.println("Staff registered successfully with ID: " + savedStaff.getId());
             
         } catch (ServiceException e) {

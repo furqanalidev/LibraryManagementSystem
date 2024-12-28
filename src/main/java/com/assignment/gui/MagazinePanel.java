@@ -6,16 +6,15 @@ package com.assignment.gui;
 
 import java.util.List;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import com.assignment.dao.BookDao;
 import com.assignment.dao.GenreDao;
 import com.assignment.dao.LanguageDao;
 import com.assignment.dao.MagazineBorrowDao;
 import com.assignment.dao.MagazineDao;
 import com.assignment.dao.UserMagazineBorrowDao;
-import com.assignment.dao.mysql.MySqlBookDao;
 import com.assignment.dao.mysql.MySqlGenreDao;
 import com.assignment.dao.mysql.MySqlLanguageDao;
 import com.assignment.dao.mysql.MySqlMagazineBorrowDao;
@@ -24,13 +23,11 @@ import com.assignment.dao.mysql.MySqlUserMagazineBorrowDao;
 import com.assignment.data.Genre;
 import com.assignment.data.Language;
 import com.assignment.data.Magazine;
-import com.assignment.service.BookService;
 import com.assignment.service.BorrowService;
 import com.assignment.service.DatabaseConnectionService;
 import com.assignment.service.GenreService;
 import com.assignment.service.LanguageService;
 import com.assignment.service.MagazineService;
-import com.assignment.service.impl.BookServiceImpl;
 import com.assignment.service.impl.BorrowServiceImpl;
 import com.assignment.service.impl.DatabaseConnectionServiceImpl;
 import com.assignment.service.impl.GenreServiceImpl;
@@ -59,6 +56,7 @@ public class MagazinePanel extends javax.swing.JPanel {
                 setAllText(magazine);
                 setAllEditable(true);
                 setAllFocusable(true);
+                button.setVisible(true);
                 loadComboBoxes();
                 break;
 
@@ -290,7 +288,7 @@ public class MagazinePanel extends javax.swing.JPanel {
                                                         new Genre(genre.getSelectedIndex() + 1, genre.getSelectedItem().toString()),
                                                         new Language(language.getSelectedIndex() + 1, language.getSelectedItem().toString()));
                     magazineService.addMagazine(newMagazine);
-                    //((MainWindow)SwingUtilities.getWindowAncestor(this)).refreshMagazines();
+                    ((MainWindow) SwingUtilities.getWindowAncestor((JDialog) SwingUtilities.getWindowAncestor(this))).refreshStaff();
                     JOptionPane.showMessageDialog(null, "Magazine Added");
                     break;
 

@@ -9,6 +9,7 @@ import com.assignment.dao.CredentialsDao;
 
 public class MySqlCredentialsDao implements  CredentialsDao {
     private static final String VALIDATE = "SELECT * FROM Credentials WHERE username = ? AND password = ?";
+    private static final String CREATE = "INSERT INTO Credentials (username, password) VALUES (?, ?)";
 
     private final Connection connection;
 
@@ -23,6 +24,16 @@ public class MySqlCredentialsDao implements  CredentialsDao {
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
             return rs.next();
+        }
+    }
+
+    @Override
+    public boolean create(String username, String password) throws SQLException {
+        try (PreparedStatement stmt = connection.prepareStatement(CREATE)) {
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected == 1;
         }
     }
 }

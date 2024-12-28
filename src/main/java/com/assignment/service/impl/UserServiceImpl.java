@@ -1,6 +1,8 @@
 package com.assignment.service.impl;
 
 import com.assignment.dao.UserDao;
+import com.assignment.dao.mysql.MySqlCredentialsDao;
+import com.assignment.dao.CredentialsDao;
 import com.assignment.dao.UserActivityLogDao;
 import com.assignment.data.User;
 import com.assignment.data.UserActivityLog;
@@ -25,16 +27,20 @@ public class UserServiceImpl implements UserService {
     }
     
     @Override
-    public User registerUser(User user) throws ServiceException {
+    public User registerUser(User user, String password) throws ServiceException {
         try {
-            // Check if user with same email or CNIC exists
+            // Check if user with same username email or CNIC exists
+            if (userDao.findByUsername(user.getUsername()).isPresent()) {
+                throw new ServiceException("Username already registered");
+            }
             if (userDao.findByEmail(user.getEmail()).isPresent()) {
                 throw new ServiceException("Email already registered");
             }
             if (userDao.findByCnic(user.getCnic()).isPresent()) {
                 throw new ServiceException("CNIC already registered");
             }
-            
+            CredentialsDao credentialsDao = new MySqlCredentialsDao(DatabaseConnectionServiceImpl.newConnection());
+            credentialsDao.create(user.getUsername(), password);
             return userDao.save(user);
         } catch (SQLException e) {
             throw new ServiceException("Failed to register user", e);

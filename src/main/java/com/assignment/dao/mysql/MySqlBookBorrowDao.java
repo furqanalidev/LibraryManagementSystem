@@ -167,10 +167,10 @@ public class MySqlBookBorrowDao implements BookBorrowDao {
                               bookRs.getString("title"),
                               bookRs.getString("author"),
                               bookRs.getString("publisher"),
-                              new Language(bookRs.getInt("language_id"), null),
+                              new Language(bookRs.getInt("languageId"), null),
                               Year.of(bookRs.getInt("year")),
                               bookRs.getInt("availableCopies"),
-                              new Genre(bookRs.getInt("genre_id"), null),
+                              new Genre(bookRs.getInt("genreId"), null),
                               bookRs.getBoolean("isBorrowable"),
                               bookRs.getTimestamp("created_at") != null ? 
                                   bookRs.getTimestamp("created_at").toLocalDateTime() : null,

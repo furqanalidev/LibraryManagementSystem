@@ -1,6 +1,8 @@
 package com.assignment.service.impl;
 
 import com.assignment.dao.StaffDao;
+import com.assignment.dao.CredentialsDao;
+import com.assignment.dao.mysql.MySqlCredentialsDao;
 import com.assignment.data.Staff;
 import com.assignment.service.StaffService;
 import com.assignment.service.ServiceException;
@@ -21,9 +23,12 @@ public class StaffServiceImpl implements StaffService {
     }
     
     @Override
-    public Staff registerStaff(Staff staff) throws ServiceException {
+    public Staff registerStaff(Staff staff, String password) throws ServiceException {
         try {
-            // Check if staff with same email exists
+            // Check if staff with same email, cnic or username exists
+            if (staffDao.findByUsername(staff.getUsername()).isPresent()) {
+                throw new ServiceException("Username already registered");
+            }
             if (staffDao.findByEmail(staff.getEmail()).isPresent()) {
                 throw new ServiceException("Email already registered");
             }
@@ -31,6 +36,8 @@ public class StaffServiceImpl implements StaffService {
                 throw new ServiceException("CNIC already registered");
             }
             
+            CredentialsDao credentialsDao = new MySqlCredentialsDao(DatabaseConnectionServiceImpl.newConnection());
+            credentialsDao.create(staff.getUsername(), password);
             return staffDao.save(staff);
         } catch (SQLException e) {
             throw new ServiceException("Failed to register staff member", e);

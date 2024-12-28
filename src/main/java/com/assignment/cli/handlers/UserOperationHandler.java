@@ -83,7 +83,7 @@ public class UserOperationHandler {
             User user = new User(0,username, firstName, lastName, cnic, address, contact, 
                                email, 0, 5, 3); // Default limits
             
-            User savedUser = userService.registerUser(user);
+            User savedUser = userService.registerUser(user, null);
             System.out.println("User registered successfully with ID: " + savedUser.getId());
             
         } catch (ServiceException e) {

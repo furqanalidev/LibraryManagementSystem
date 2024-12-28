@@ -58,6 +58,7 @@ public class LoginForm extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
+        jCheckBox2 = new javax.swing.JCheckBox(); // Initialize the new checkbox
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Login");
@@ -105,6 +106,9 @@ public class LoginForm extends javax.swing.JDialog {
             }
         });
 
+        jCheckBox2.setText("Save login info"); // Set text for the new checkbox
+        jCheckBox2.setBorder(new FlatRoundBorder());
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -127,7 +131,8 @@ public class LoginForm extends javax.swing.JDialog {
                         .addComponent(jLabel4)
                         .addComponent(jPasswordField1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
                         .addComponent(jTextField1))
-                    .addComponent(jCheckBox1))
+                    .addComponent(jCheckBox1)
+                    .addComponent(jCheckBox2)) // Add the new checkbox to the layout
                 .addGap(47, 47, 47))
         );
         layout.setVerticalGroup(
@@ -147,6 +152,8 @@ public class LoginForm extends javax.swing.JDialog {
                 .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBox1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox2) // Add the new checkbox to the layout
                 .addGap(24, 24, 24)
                 .addComponent(jButton1)
                 .addGap(71, 71, 71))
@@ -189,15 +196,28 @@ public class LoginForm extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        
+        if (jCheckBox1.isSelected()) {
+            jPasswordField1.setEchoChar((char) 0); // Show password
+        } else {
+            jPasswordField1.setEchoChar('*'); // Hide password
+        }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void saveLastLogin(String username, String password) {
-        Credential creds = new Credential(username, password);
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(LAST_LOGIN_FILE))) {
-            oos.writeObject(creds);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (jCheckBox2.isSelected()) { // Check if "Save Login Info" is selected
+            Credential creds = new Credential(username, password);
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(LAST_LOGIN_FILE))) {
+                oos.writeObject(creds);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // Clear the saved credentials if the checkbox is not selected
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(LAST_LOGIN_FILE))) {
+                oos.writeObject(null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -207,9 +227,13 @@ public class LoginForm extends javax.swing.JDialog {
             if (lastLoginCredentials != null) {
                 jTextField1.setText(lastLoginCredentials.getUsername());
                 jPasswordField1.setText(lastLoginCredentials.getPassword());
+                jCheckBox2.setSelected(true); // Set the checkbox to selected if credentials are loaded
+            } else {
+                jCheckBox2.setSelected(false); // Set the checkbox to not selected if no credentials are loaded
             }
         } catch (IOException | ClassNotFoundException e) {
             // First time use - no saved credentials
+            jCheckBox2.setSelected(false); // Set the checkbox to not selected if an exception occurs
         }
     }
 
@@ -259,6 +283,7 @@ public class LoginForm extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2; // Declare the new checkbox
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

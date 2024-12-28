@@ -4,7 +4,13 @@
  */
 package com.assignment.gui;
 
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
 import com.assignment.data.User;
+import com.assignment.service.ServiceFactory;
+import com.assignment.service.UserService;
 import com.formdev.flatlaf.ui.FlatRoundBorder;
 
 /**
@@ -12,12 +18,41 @@ import com.formdev.flatlaf.ui.FlatRoundBorder;
  * @author meher
  */
 public class UserPanel extends javax.swing.JPanel {
+    private User user;
+    private DrawMode drawMode;
 
     /**
      * Creates new form UserPanel
      */
+    @SuppressWarnings("incomplete-switch")
     public UserPanel(User user, DrawMode drawMode) {
+        this.user = user;
+        this.drawMode = drawMode;
         initComponents();
+        switch (drawMode) {
+            case ADMIN:
+            case LIBRARIAN:
+            case MANAGER:
+            case UPDATE:
+                button.setText("Update");
+                setAllText();
+                passsword.setVisible(false);
+                passwordLable.setVisible(false);
+                setAllEditable(true);
+                setAllFocusable(true);
+                username.setEditable(false);
+                break;
+
+            case CREATE:
+                button.setText("Add");
+                setAllEditable(true);
+                setAllFocusable(true);
+                removeButton.setVisible(false);
+                break;
+        }
+    }
+
+    private void setAllText() {
         username.setText(user.getUsername());
         firstName.setText(user.getFirstName());
         lastName.setText(user.getLastName());
@@ -28,19 +63,32 @@ public class UserPanel extends javax.swing.JPanel {
         borrowings.setText(Integer.toString(user.getBorrowings()));
         bookBorrowLimit.setText(Integer.toString(user.getBookBorrowLimit()));
         magazineBorrowLimit.setText(Integer.toString(user.getMagazineBorrowLimit()));
-        switch (drawMode) {
-            case LIBRARIAN:
-            case MANAGER:
-            case ADMIN:
-                button.setText("Update");
-                break;
-        
-            case USER:
-                button.setText("Borrow");
-                removeButton.setVisible(false);
-            default:
-                break;
-        }
+    }
+
+    private void setAllEditable(boolean choise) {
+        username.setEditable(choise);
+        firstName.setEditable(choise);
+        lastName.setEditable(choise);
+        cnic.setEditable(choise);
+        address.setEditable(choise);
+        contact.setEditable(choise);
+        email.setEditable(choise);
+        borrowings.setEditable(choise);
+        magazineBorrowLimit.setEditable(choise);
+        bookBorrowLimit.setEditable(choise);
+    }
+
+    private void setAllFocusable(boolean choise) {
+        username.setFocusable(choise);
+        firstName.setFocusable(choise);
+        lastName.setFocusable(choise);
+        cnic.setFocusable(choise);
+        address.setFocusable(choise);
+        contact.setFocusable(choise);
+        email.setFocusable(choise);
+        borrowings.setFocusable(choise);
+        magazineBorrowLimit.setFocusable(choise);
+        bookBorrowLimit.setFocusable(choise);
     }
 
     /**
@@ -74,6 +122,9 @@ public class UserPanel extends javax.swing.JPanel {
         jLabel11 = new javax.swing.JLabel();
         button = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
+        passsword = new javax.swing.JTextField();
+        passwordLable = new javax.swing.JLabel();
+        userLabel = new javax.swing.JLabel();
 
         setBorder(new FlatRoundBorder());
 
@@ -165,6 +216,20 @@ public class UserPanel extends javax.swing.JPanel {
             }
         });
 
+        passsword.setToolTipText("");
+        passsword.setBorder(new FlatRoundBorder());
+        passsword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passswordActionPerformed(evt);
+            }
+        });
+
+        passwordLable.setText("Password");
+
+        userLabel.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        userLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        userLabel.setText("User");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -175,8 +240,9 @@ public class UserPanel extends javax.swing.JPanel {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(removeButton)
                         .addGap(18, 18, 18)
-                        .addComponent(button))
-                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(button)
+                        .addGap(20, 20, 20))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel6)
@@ -188,28 +254,37 @@ public class UserPanel extends javax.swing.JPanel {
                             .addComponent(jLabel8)
                             .addComponent(jLabel11)
                             .addComponent(jLabel9)
-                            .addComponent(jLabel10))
+                            .addComponent(jLabel10)
+                            .addComponent(passwordLable))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(contact, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(firstName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
-                            .addComponent(lastName, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cnic, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(email, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(address, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(username, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
-                            .addComponent(borrowings, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(magazineBorrowLimit)
-                            .addComponent(bookBorrowLimit, javax.swing.GroupLayout.Alignment.LEADING))))
-                .addGap(42, 42, 42))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(passsword, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                            .addComponent(contact)
+                            .addComponent(firstName, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                            .addComponent(lastName)
+                            .addComponent(cnic)
+                            .addComponent(email)
+                            .addComponent(address)
+                            .addComponent(username, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                            .addComponent(borrowings)
+                            .addComponent(magazineBorrowLimit, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(bookBorrowLimit))))
+                .addGap(22, 22, 22))
+            .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
+                .addContainerGap()
+                .addComponent(userLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(passsword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(passwordLable))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(firstName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -250,25 +325,71 @@ public class UserPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(button)
                     .addComponent(removeButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void firstNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameActionPerformed
-        // TODO add your handling code here:
+        // nothing to do here
     }//GEN-LAST:event_firstNameActionPerformed
 
     private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
-        // TODO add your handling code here:
+        // nothing to do here
     }//GEN-LAST:event_usernameActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        // TODO add your handling code here:
+        JOptionPane.showMessageDialog(null, "Functionality not implemented yet!");
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonActionPerformed
-        // TODO add your handling code here:
+        ServiceFactory serviceFactory = new ServiceFactory();
+        UserService userService = serviceFactory.getUserService();
+        switch (this.drawMode) {
+            case CREATE:
+                User newUser = new User(0, username.getText(), firstName.getText(), lastName.getText(), Long.parseLong(cnic.getText()), address.getText(), contact.getText(), email.getText(), Integer.parseInt(borrowings.getText()), Integer.parseInt(bookBorrowLimit.getText()), Integer.parseInt(magazineBorrowLimit.getText()));
+                try {
+                    userService.registerUser(newUser, passsword.getText());
+                    try {
+                        ((MainWindow) SwingUtilities.getWindowAncestor((JDialog) SwingUtilities.getWindowAncestor(this))).refreshStaff();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        JOptionPane.showMessageDialog(this, "User registered successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        ((JDialog) SwingUtilities.getWindowAncestor(this)).dispose();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case UPDATE:
+                User updatedUser = new User(this.user.getId(), this.user.getUsername(), firstName.getText(), lastName.getText(), Long.parseLong(cnic.getText()), address.getText(), contact.getText(), email.getText(), Integer.parseInt(borrowings.getText()), Integer.parseInt(bookBorrowLimit.getText()), Integer.parseInt(magazineBorrowLimit.getText()));
+                if (updatedUser.equals(this.user)) {
+                    JOptionPane.showMessageDialog(this, "No changer were made", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    try {
+                        userService.updateUser(updatedUser);
+                        try {
+                            ((MainWindow) SwingUtilities.getWindowAncestor(this)).refreshStaff();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            JOptionPane.showMessageDialog(this, "User updated successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+        
+            default:
+                break;
+        }
     }//GEN-LAST:event_buttonActionPerformed
+
+    private void passswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passswordActionPerformed
+        // nothing to do here
+    }//GEN-LAST:event_passswordActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -292,7 +413,10 @@ public class UserPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField lastName;
     private javax.swing.JTextField magazineBorrowLimit;
+    private javax.swing.JTextField passsword;
+    private javax.swing.JLabel passwordLable;
     private javax.swing.JButton removeButton;
+    private javax.swing.JLabel userLabel;
     private javax.swing.JTextField username;
     // End of variables declaration//GEN-END:variables
 }

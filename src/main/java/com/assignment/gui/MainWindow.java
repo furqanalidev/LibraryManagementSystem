@@ -4,21 +4,17 @@
  */
 package com.assignment.gui;
 
-import java.awt.Frame;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.border.Border;
-
 import com.assignment.data.Person;
 import com.assignment.data.Staff;
 import com.assignment.data.User;
 import com.assignment.service.ServiceException;
 import com.assignment.service.ServiceFactory;
 import com.assignment.theme.myTheme;
-import com.assignment.gui.MagazinePanel;
 
 /**
  *
@@ -28,6 +24,7 @@ public class MainWindow extends javax.swing.JFrame {
     ServiceFactory serviceFactory = new ServiceFactory();
     DrawMode drawMode = DrawMode.USERDISPLAY;
     Person person;
+    int borrowingId = 1;
     /**
      * Creates new form MainWindow
     * @throws ServiceException 
@@ -64,6 +61,7 @@ public class MainWindow extends javax.swing.JFrame {
             addMagazineButton.setVisible(false);
             addUserButton.setVisible(false);
             addStaffButton.setVisible(false);
+            this.borrowingId = person.getId();
         }
     }
 
@@ -119,6 +117,33 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
 
+    private void displayBorrowedBooks() throws ServiceException {
+        borrowedBooksPane.removeAll();
+        try {
+            serviceFactory.getBorrowService().getActiveBookBorrows(this.borrowingId).forEach(bookBorrow -> {
+            BorrowPanel bookPanel = new BorrowPanel(bookBorrow, drawMode);
+            borrowedBooksPane.add(bookPanel);
+            borrowedBooksPane.revalidate();
+        });
+        } catch (ServiceException e) {
+            e.printStackTrace();
+            throw new ServiceException("Error loading borrowed books");
+        }
+    }
+
+    private void displayBorrowedMagazines() throws ServiceException {
+        borrowedMagazinesTab.removeAll();
+        try {
+            serviceFactory.getBorrowService().getActiveMagazineBorrows(this.borrowingId).forEach(magazineBorrow -> {
+            BorrowPanel magazinePanel = new BorrowPanel(magazineBorrow, drawMode);
+            borrowedMagazinesTab.add(magazinePanel);
+            borrowedMagazinesTab.revalidate();
+        });
+        } catch (ServiceException e) {
+            throw new ServiceException("Error loading borrowed magazines");
+        }
+    }
+
     public void refreshBooks() {
         try {
             displayBookPanel.removeAll();
@@ -127,6 +152,19 @@ public class MainWindow extends javax.swing.JFrame {
             displayBookPanel.repaint();
         } catch (ServiceException e) {
             JOptionPane.showMessageDialog(null, "Error refreshing books");
+        }
+    }
+
+    public void refresgBorrowings() {
+        try {
+            borrowedBooksPane.removeAll();
+            borrowedMagazinesTab.removeAll();
+            displayBorrowedBooks();
+            displayBorrowedMagazines();
+            borrowedTabbedPane.revalidate();
+            borrowedTabbedPane.repaint();
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(this, "Erroe refreshing borrowings", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
     
@@ -188,10 +226,16 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         displayUserPanel = new javax.swing.JPanel();
         addUserButton = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        borrowedTabbedPane = new javax.swing.JTabbedPane();
+        borrowedBooksPane = new javax.swing.JPanel();
+        borrowedMagazinesTab = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Library Management System");
         setPreferredSize(new java.awt.Dimension(1368, 720));
+        setResizable(false);
 
         myTab.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         myTab.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -233,24 +277,21 @@ public class MainWindow extends javax.swing.JFrame {
             bookTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bookTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(bookTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(bookTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(bookTabLayout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1218, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1105, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addBookButton))
+                        .addComponent(addBookButton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(displayBookPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1257, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
         bookTabLayout.setVerticalGroup(
             bookTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(bookTabLayout.createSequentialGroup()
-                .addGroup(bookTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(bookTabLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bookTabLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(addBookButton)))
+                .addGap(18, 18, 18)
+                .addGroup(bookTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addBookButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(displayBookPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
                 .addContainerGap())
@@ -286,12 +327,13 @@ public class MainWindow extends javax.swing.JFrame {
             magazineTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(magazineTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(magazineTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(magazineTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(displayMagazinePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1265, Short.MAX_VALUE))
-                .addGap(10, 10, 10)
-                .addComponent(addMagazineButton)
-                .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, magazineTabLayout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addMagazineButton)))
+                .addContainerGap(158, Short.MAX_VALUE))
         );
         magazineTabLayout.setVerticalGroup(
             magazineTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -340,15 +382,13 @@ public class MainWindow extends javax.swing.JFrame {
             staffTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(staffTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(staffTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(staffTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(staffTabLayout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 1146, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addStaffButton)
-                        .addContainerGap())
-                    .addGroup(staffTabLayout.createSequentialGroup()
-                        .addComponent(displayStaffPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 156, Short.MAX_VALUE))))
+                        .addComponent(addStaffButton))
+                    .addComponent(displayStaffPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 90, Short.MAX_VALUE))
         );
         staffTabLayout.setVerticalGroup(
             staffTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -397,15 +437,13 @@ public class MainWindow extends javax.swing.JFrame {
             userTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(userTabLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(userTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(userTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(userTabLayout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 1147, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addUserButton)
-                        .addContainerGap())
-                    .addGroup(userTabLayout.createSequentialGroup()
-                        .addComponent(displayUserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1257, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 156, Short.MAX_VALUE))))
+                        .addComponent(addUserButton))
+                    .addComponent(displayUserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1257, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 90, Short.MAX_VALUE))
         );
         userTabLayout.setVerticalGroup(
             userTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -420,6 +458,48 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         myTab.addTab("User", userTab);
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("User Borrowings");
+        jLabel5.setFocusable(false);
+
+        borrowedBooksPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                borrowedBooksPaneComponentShown(evt);
+            }
+        });
+        borrowedTabbedPane.addTab("Books", borrowedBooksPane);
+
+        borrowedMagazinesTab.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                borrowedMagazinesTabComponentShown(evt);
+            }
+        });
+        borrowedTabbedPane.addTab("Magazines", borrowedMagazinesTab);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(borrowedTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 1255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(92, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(borrowedTabbedPane)
+                .addContainerGap())
+        );
+
+        myTab.addTab("Borrowings", jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -491,12 +571,17 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_addBookButtonActionPerformed
 
     private void addUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserButtonActionPerformed
-        // TODO add your handling code here:
+        JDialog dialog = new JDialog(this, "Add new User", true);
+        dialog.setSize(310, 550);
+        dialog.setResizable(false);
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.add(new UserPanel(null, DrawMode.CREATE));
+        dialog.setVisible(true);
     }//GEN-LAST:event_addUserButtonActionPerformed
 
     private void addStaffButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addStaffButtonActionPerformed
         JDialog dialog = new JDialog(this, "Add new Staff", true);
-        dialog.setSize(310, 450);
+        dialog.setSize(310, 470);
         dialog.setResizable(false);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.add(new StaffPanel(null, DrawMode.CREATE));
@@ -513,6 +598,22 @@ public class MainWindow extends javax.swing.JFrame {
         dialog.add(new MagazinePanel(null, DrawMode.CREATE));
         dialog.setVisible(true);
     }//GEN-LAST:event_addMagazineButtonActionPerformed
+
+    private void borrowedBooksPaneComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_borrowedBooksPaneComponentShown
+        try {
+            displayBorrowedBooks();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_borrowedBooksPaneComponentShown
+
+    private void borrowedMagazinesTabComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_borrowedMagazinesTabComponentShown
+        try {
+            displayBorrowedMagazines();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_borrowedMagazinesTabComponentShown
 
     /**
      * @param args the command line arguments
@@ -542,6 +643,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton addStaffButton;
     private javax.swing.JButton addUserButton;
     private javax.swing.JPanel bookTab;
+    private javax.swing.JPanel borrowedBooksPane;
+    private javax.swing.JPanel borrowedMagazinesTab;
+    private javax.swing.JTabbedPane borrowedTabbedPane;
     private javax.swing.JPanel displayBookPanel;
     private javax.swing.JPanel displayMagazinePanel;
     private javax.swing.JPanel displayStaffPanel;
@@ -550,6 +654,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel magazineTab;
     private javax.swing.JTabbedPane myTab;
     private javax.swing.JPanel staffTab;

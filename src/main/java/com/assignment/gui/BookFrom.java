@@ -349,11 +349,11 @@ public class BookFrom extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void borrowableActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_borrowableActionPerformed
-        // TODO add your handling code here:
+        // nothing to do here
     }// GEN-LAST:event_borrowableActionPerformed
 
     private void isbnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_isbnActionPerformed
-        // TODO add your handling code here:
+        // nothing to do here
     }// GEN-LAST:event_isbnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
@@ -393,7 +393,7 @@ public class BookFrom extends javax.swing.JDialog {
                     break;
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            e.printStackTrace();
         }
     }// GEN-LAST:event_jButton1ActionPerformed
 
