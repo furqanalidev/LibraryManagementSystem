@@ -4,24 +4,25 @@
  */
 package com.assignment.gui;
 
-import com.assignment.gui.panels.UserPanel;
-import com.assignment.gui.panels.StaffPanel;
-import com.assignment.gui.panels.MagazinePanel;
-import com.assignment.gui.panels.BorrowPanel;
-import com.assignment.gui.panels.BookPanel;
-import com.assignment.gui.panels.BookFrom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+
 import com.assignment.data.Person;
 import com.assignment.data.Staff;
 import com.assignment.data.User;
+import com.assignment.gui.panels.BookFrom;
+import com.assignment.gui.panels.BookPanel;
+import com.assignment.gui.panels.BorrowPanel;
+import com.assignment.gui.panels.MagazinePanel;
+import com.assignment.gui.panels.StaffPanel;
+import com.assignment.gui.panels.UserPanel;
+import com.assignment.gui.theme.myTheme;
 import com.assignment.service.ServiceException;
 import com.assignment.service.ServiceFactory;
 import com.formdev.flatlaf.ui.FlatRoundBorder;
-import com.assignment.gui.theme.myTheme;
 
 /**
  *
@@ -31,10 +32,12 @@ public class MainWindow extends javax.swing.JFrame {
     ServiceFactory serviceFactory = new ServiceFactory();
     DrawMode drawMode = DrawMode.USERDISPLAY;
     Person person;
+
     /**
      * Creates new form MainWindow
-    * @throws ServiceException 
-    */
+     * 
+     * @throws ServiceException
+     */
     public MainWindow(Person person) throws ServiceException {
         initComponents();
         setLocationRelativeTo(null);
@@ -50,11 +53,11 @@ public class MainWindow extends javax.swing.JFrame {
                 case LIBRARIAN:
                     drawMode = DrawMode.LIBRARIAN;
                     myTab.remove(userTab);
-                    
+
                     break;
 
                 case MANAGER:
-                    drawMode = DrawMode.MANAGER;                    
+                    drawMode = DrawMode.MANAGER;
                     break;
 
                 default:
@@ -99,10 +102,10 @@ public class MainWindow extends javax.swing.JFrame {
         displayBookPanel.removeAll();
         try {
             serviceFactory.getBookService().getAvailableBooks().forEach(book -> {
-            BookPanel bookPanel = new BookPanel(book, drawMode);
-            displayBookPanel.add(bookPanel);
-            displayBookPanel.revalidate();
-        });
+                BookPanel bookPanel = new BookPanel(book, drawMode);
+                displayBookPanel.add(bookPanel);
+                displayBookPanel.revalidate();
+            });
         } catch (ServiceException e) {
             throw new ServiceException("Error loading books");
         }
@@ -112,10 +115,10 @@ public class MainWindow extends javax.swing.JFrame {
         displayMagazinePanel.removeAll();
         try {
             serviceFactory.getMagazineService().getAvailableMagazines().forEach(magazine -> {
-            MagazinePanel magazinePanel = new MagazinePanel(magazine, drawMode);
-            displayMagazinePanel.add(magazinePanel);
-            displayMagazinePanel.revalidate();
-        });
+                MagazinePanel magazinePanel = new MagazinePanel(magazine, drawMode);
+                displayMagazinePanel.add(magazinePanel);
+                displayMagazinePanel.revalidate();
+            });
         } catch (ServiceException e) {
             throw new ServiceException("Error loading magazines");
         }
@@ -123,26 +126,26 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void displayStaff() throws ServiceException {
         displayStaffPanel.removeAll();
-        try{
+        try {
             serviceFactory.getStaffService().findAll().forEach(staff -> {
                 StaffPanel staffPanel = new StaffPanel(staff, DrawMode.UPDATE);
                 displayStaffPanel.add(staffPanel);
                 displayStaffPanel.revalidate();
             });
-        }  catch (ServiceException e) {
+        } catch (ServiceException e) {
             throw new ServiceException("Error loading staff");
         }
     }
 
     private void displayUser() throws ServiceException {
         displayUserPanel.removeAll();
-        try{
+        try {
             serviceFactory.getUserService().findAll().forEach(user -> {
                 UserPanel userPanel = new UserPanel(user, drawMode);
                 displayUserPanel.add(userPanel);
                 displayUserPanel.revalidate();
             });
-        }  catch (ServiceException e) {
+        } catch (ServiceException e) {
             throw new ServiceException("Error loading users");
         }
     }
@@ -150,11 +153,13 @@ public class MainWindow extends javax.swing.JFrame {
     private void displayBorrowedBooks() throws ServiceException {
         borrowedBooksPane.removeAll();
         try {
-            serviceFactory.getBorrowService().getActiveBookBorrows(getUserIdByUsername(borrowingsOf.getSelectedItem().toString())).forEach(bookBorrow -> {
-            BorrowPanel bookPanel = new BorrowPanel(bookBorrow, drawMode);
-            borrowedBooksPane.add(bookPanel);
-            borrowedBooksPane.revalidate();
-        });
+            serviceFactory.getBorrowService()
+                    .getActiveBookBorrows(getUserIdByUsername(borrowingsOf.getSelectedItem().toString()))
+                    .forEach(bookBorrow -> {
+                        BorrowPanel bookPanel = new BorrowPanel(bookBorrow, drawMode);
+                        borrowedBooksPane.add(bookPanel);
+                        borrowedBooksPane.revalidate();
+                    });
         } catch (ServiceException e) {
             e.printStackTrace();
             throw new ServiceException("Error loading borrowed books");
@@ -164,11 +169,13 @@ public class MainWindow extends javax.swing.JFrame {
     private void displayBorrowedMagazines() throws ServiceException {
         borrowedMagazinesTab.removeAll();
         try {
-            serviceFactory.getBorrowService().getActiveMagazineBorrows(getUserIdByUsername(borrowingsOf.getSelectedItem().toString())).forEach(magazineBorrow -> {
-            BorrowPanel magazinePanel = new BorrowPanel(magazineBorrow, drawMode);
-            borrowedMagazinesTab.add(magazinePanel);
-            borrowedMagazinesTab.revalidate();
-        });
+            serviceFactory.getBorrowService()
+                    .getActiveMagazineBorrows(getUserIdByUsername(borrowingsOf.getSelectedItem().toString()))
+                    .forEach(magazineBorrow -> {
+                        BorrowPanel magazinePanel = new BorrowPanel(magazineBorrow, drawMode);
+                        borrowedMagazinesTab.add(magazinePanel);
+                        borrowedMagazinesTab.revalidate();
+                    });
         } catch (ServiceException e) {
             throw new ServiceException("Error loading borrowed magazines");
         }
@@ -197,7 +204,7 @@ public class MainWindow extends javax.swing.JFrame {
             JOptionPane.showConfirmDialog(this, "Erroe refreshing borrowings", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    
+
     public void refreshMagazines() {
         try {
             displayMagazinePanel.removeAll();
@@ -219,6 +226,7 @@ public class MainWindow extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error refreshing staff");
         }
     }
+
     public void refreshUsers() {
         try {
             displayUserPanel.removeAll();
@@ -235,7 +243,8 @@ public class MainWindow extends javax.swing.JFrame {
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
-    //@SuppressWarnings("unchecked")
+    // @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -567,113 +576,113 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void myTabStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_myTabStateChanged
+    private void myTabStateChanged(javax.swing.event.ChangeEvent evt) {// GEN-FIRST:event_myTabStateChanged
 
-    }//GEN-LAST:event_myTabStateChanged
+    }// GEN-LAST:event_myTabStateChanged
 
-    private void myTabFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_myTabFocusGained
-        
-    }//GEN-LAST:event_myTabFocusGained
+    private void myTabFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_myTabFocusGained
 
-    private void magazineTabComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_magazineTabComponentShown
+    }// GEN-LAST:event_myTabFocusGained
+
+    private void magazineTabComponentShown(java.awt.event.ComponentEvent evt) {// GEN-FIRST:event_magazineTabComponentShown
         try {
             displayMagazines();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error loading magazines");
         }
-    }//GEN-LAST:event_magazineTabComponentShown
+    }// GEN-LAST:event_magazineTabComponentShown
 
-    private void bookTabComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_bookTabComponentShown
+    private void bookTabComponentShown(java.awt.event.ComponentEvent evt) {// GEN-FIRST:event_bookTabComponentShown
         try {
             displayBooks();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error loading books");
         }
-    }//GEN-LAST:event_bookTabComponentShown
+    }// GEN-LAST:event_bookTabComponentShown
 
-    private void displayStaffPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_displayStaffPanelComponentShown
+    private void displayStaffPanelComponentShown(java.awt.event.ComponentEvent evt) {// GEN-FIRST:event_displayStaffPanelComponentShown
         // nothing to do here
-    }//GEN-LAST:event_displayStaffPanelComponentShown
+    }// GEN-LAST:event_displayStaffPanelComponentShown
 
-    private void staffTabComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_staffTabComponentShown
+    private void staffTabComponentShown(java.awt.event.ComponentEvent evt) {// GEN-FIRST:event_staffTabComponentShown
         try {
             displayStaff();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_staffTabComponentShown
+    }// GEN-LAST:event_staffTabComponentShown
 
-    private void displayUserPanelComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_displayUserPanelComponentShown
-        //nothing to do here
-    }//GEN-LAST:event_displayUserPanelComponentShown
+    private void displayUserPanelComponentShown(java.awt.event.ComponentEvent evt) {// GEN-FIRST:event_displayUserPanelComponentShown
+        // nothing to do here
+    }// GEN-LAST:event_displayUserPanelComponentShown
 
-    private void userTabComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_userTabComponentShown
+    private void userTabComponentShown(java.awt.event.ComponentEvent evt) {// GEN-FIRST:event_userTabComponentShown
         try {
             displayUser();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_userTabComponentShown
+    }// GEN-LAST:event_userTabComponentShown
 
-    private void addBookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBookButtonActionPerformed
+    private void addBookButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addBookButtonActionPerformed
         BookFrom.main(null, DrawMode.CREATE, null);
-    }//GEN-LAST:event_addBookButtonActionPerformed
+    }// GEN-LAST:event_addBookButtonActionPerformed
 
-    private void addUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserButtonActionPerformed
+    private void addUserButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addUserButtonActionPerformed
         JDialog dialog = new JDialog(this, "Add new User", true);
         dialog.setSize(310, 550);
         dialog.setResizable(false);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.add(new UserPanel(null, DrawMode.CREATE));
         dialog.setVisible(true);
-    }//GEN-LAST:event_addUserButtonActionPerformed
+    }// GEN-LAST:event_addUserButtonActionPerformed
 
-    private void addStaffButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addStaffButtonActionPerformed
+    private void addStaffButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addStaffButtonActionPerformed
         JDialog dialog = new JDialog(this, "Add new Staff", true);
         dialog.setSize(310, 470);
         dialog.setResizable(false);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         dialog.add(new StaffPanel(null, DrawMode.CREATE));
         dialog.setVisible(true);
-    }//GEN-LAST:event_addStaffButtonActionPerformed
+    }// GEN-LAST:event_addStaffButtonActionPerformed
 
-    private void addMagazineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMagazineButtonActionPerformed
+    private void addMagazineButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addMagazineButtonActionPerformed
         JDialog dialog = new JDialog();
         dialog.setSize(400, 280);
         dialog.setResizable(false);
         dialog.setTitle("Add Magazine");
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        //dialog.setLayout(new BorderLayout());
+        // dialog.setLayout(new BorderLayout());
         dialog.add(new MagazinePanel(null, DrawMode.CREATE));
         dialog.setVisible(true);
-    }//GEN-LAST:event_addMagazineButtonActionPerformed
+    }// GEN-LAST:event_addMagazineButtonActionPerformed
 
-    private void borrowedBooksPaneComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_borrowedBooksPaneComponentShown
+    private void borrowedBooksPaneComponentShown(java.awt.event.ComponentEvent evt) {// GEN-FIRST:event_borrowedBooksPaneComponentShown
         try {
             displayBorrowedBooks();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_borrowedBooksPaneComponentShown
+    }// GEN-LAST:event_borrowedBooksPaneComponentShown
 
-    private void borrowedMagazinesTabComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_borrowedMagazinesTabComponentShown
+    private void borrowedMagazinesTabComponentShown(java.awt.event.ComponentEvent evt) {// GEN-FIRST:event_borrowedMagazinesTabComponentShown
         try {
             displayBorrowedMagazines();
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }//GEN-LAST:event_borrowedMagazinesTabComponentShown
+    }// GEN-LAST:event_borrowedMagazinesTabComponentShown
 
-    private void borrowingsOfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowingsOfActionPerformed
+    private void borrowingsOfActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_borrowingsOfActionPerformed
         refresgBorrowings();
-    }//GEN-LAST:event_borrowingsOfActionPerformed
+    }// GEN-LAST:event_borrowingsOfActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[], Person person) throws ServiceException {
         myTheme.setup();
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
