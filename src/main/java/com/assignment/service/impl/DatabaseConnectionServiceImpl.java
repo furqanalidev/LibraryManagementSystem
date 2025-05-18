@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Implementation of the DatabaseConnectionService interface.
  *
- * @author MeHeR ALi
+ * @author Meher Ali
  */
 public class DatabaseConnectionServiceImpl implements DatabaseConnectionService {
     
@@ -21,7 +21,7 @@ public class DatabaseConnectionServiceImpl implements DatabaseConnectionService 
     private final List<Connection> activeConnections;
     
     public DatabaseConnectionServiceImpl() {
-        this.url = "jdbc:mysql://localhost:3307/library";
+        this.url = "jdbc:mysql://localhost:3306/library";
         this.username = "root";
         this.password = "rootpass";
         this.activeConnections = new ArrayList<>();
